@@ -1,14 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
+import app_logo from './securedovelogo.png'
+import Login from './Login'
+
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          SecureDove
-        </p>
+        <img src={app_logo} className="App-logo" alt="logo" />
+        
+        <Login />
+        
       </header>
     </div>
   );

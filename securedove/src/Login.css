@@ -1,0 +1,16 @@
+.login_form{
+    border-radius: 20px;
+    /* border: solid rgb(35, 88, 35); */
+    border-width: 5px;
+}
+
+.login_form input {
+    color: green;
+}
+
+.btn_login {
+    width: 20%;
+}
+
+
+
