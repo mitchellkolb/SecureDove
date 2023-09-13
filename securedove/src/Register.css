@@ -1,0 +1,12 @@
+.register_form{
+    border-radius: 20px;
+    border-width: 5px;
+}
+
+.register_form input {
+    color: green;
+}
+
+.btn_register {
+    width: 20%;
+}

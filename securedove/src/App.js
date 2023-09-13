@@ -1,18 +1,24 @@
 import './App.css';
-import app_logo from './securedovelogo.png'
 import Login from './Login'
-
+import Register from './Register'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={app_logo} className="App-logo" alt="logo" />
-        
-        <Login />
-        
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">        
+          <Switch>
+            <Route exact path="/">
+              <Login/>
+            </Route>
+            <Route path="/register">
+              <Register/>
+            </Route>
+          </Switch>
+        </header>
+      </div>
+    </Router>
   );
 }
 
