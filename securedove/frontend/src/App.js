@@ -1,6 +1,7 @@
 import './App.css';
-import Login from './Login'
-import Register from './Register'
+import Login from './Login';
+import Register from './Register';
+import Messages from './Messages';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
@@ -10,10 +11,13 @@ function App() {
         <header className="App-header">        
           <Switch>
             <Route exact path="/">
-              <Login/>
+              <Login />
             </Route>
             <Route path="/register">
-              <Register/>
+              <Register />
+            </Route>
+            <Route path="/messages">
+              <Messages />
             </Route>
           </Switch>
         </header>
