@@ -76,3 +76,23 @@ def get_DB_info(message_id: int):
         rows = cur.fetchall()
         print(rows)
         return {"data": rows}
+
+#Endpoint that adds a user to the Users table
+@app.post("/registration")
+async def registration(username: str, email: str, password: str):
+    #Looping through Users until we find the lowest available user_id number
+    cur.execute(f"SELECT * FROM Users")
+    rows = cur.fetchall()
+    i = 1
+    for row in rows:
+         if i == row[0]:
+            i = i + 1
+            continue
+         else:
+              break
+    user_id = i
+    print(user_id)
+    #Inserting into the database
+    cur.execute(f"INSERT INTO Users (user_id, username, email, password) VALUES ({user_id}, '{username}', '{email}', '{password}')")
+    conn.commit()
+    return {"success": True}
