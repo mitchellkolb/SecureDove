@@ -76,3 +76,16 @@ def get_DB_info(message_id: int):
         rows = cur.fetchall()
         print(rows)
         return {"data": rows}
+
+#Endpoint that adds a user to the Users table
+@app.post("/registration")
+async def registration(username: str, email: str, password: str):
+    #Grabbing number of users currently in the Users table so we can increment the user_id
+    cur.execute(f"SELECT COUNT(user_id) FROM Users")
+    result = cur.fetchone()
+    user_id = result[0] + 1
+
+    #Inserting into the database
+    cur.execute(f"INSERT INTO Users (user_id, username, email, password) VALUES ({user_id}, '{username}', '{email}', '{password}')")
+    conn.commit()
+    return {"success": True}

@@ -47,7 +47,7 @@ Use `uvicorn main:app --reload` to run. If done correctly you should see this in
 <br><br>
 You can go to http://127.0.0.1:8000 to see the default screen of fastapi but if you go to http://127.0.0.1:8000/docs you can interact with all the endpoints as you are developing them.
 
-To interact with an endpoint on http://127.0.0.1:8000/docs click on the endpoint them click on **_try it out_** and enter in any input that is required or click execute if none is required. The result of that endpoint should be returned below. 
+To interact with an endpoint on http://127.0.0.1:8000/docs click on the endpoint then click on **_try it out_** and enter in any input that is required or click execute if none is required. The result of that endpoint should be returned below. 
 
 
 <br><br>
