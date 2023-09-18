@@ -3,11 +3,11 @@ import './Messages.css';
 import {Container, Form, Button} from 'react-bootstrap'
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faUser, faUserFriends,faSignOutAlt, faCircle, faComments } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faUser, faUserFriends,faSignOutAlt, faCircle, faComments, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
-
-
+import Modal from 'react-bootstrap/Modal'; // for delete pop up
+import { useHistory } from "react-router-dom"; // for redirecting 
 import app_logo from './securedovelogo.png'
 
 function Messages() {
@@ -18,6 +18,21 @@ function Messages() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    // For delete account modal
+    const [showModal, setModalShow] = useState(false);
+    const handleModalClose = () => setModalShow(false);
+    const handleModalShow = () => setModalShow(true);
+
+    // for redirecting to log in page
+    const history = useHistory();
+    // delete account for backend
+    const handleDeleteAccount = () => {
+        // IMPLEMENT BACK END CODE HERE FOR DELETING USER
+        alert('Account deleted!');
+        handleModalClose();
+        handleClose();
+        history.push('/');
+    };
 
     async function fetchDBInfo() {
         const response = await fetch(`http://localhost:8000/get_DB_info?message_id=${messageId}`);
@@ -101,7 +116,32 @@ function Messages() {
                                     
                         </Container>
                     </Navbar>
-                    
+                    <br/>
+
+                    <Navbar className="bg-body-tertiary">
+                        <Container>
+                            <Button variant="danger" onClick={handleModalShow}>
+                                <FontAwesomeIcon icon={faTrash} className="me-2" />
+                                    Delete Account
+                            </Button>         
+                        </Container>
+
+                        <Modal show={showModal} onHide={handleModalClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Warning</Modal.Title>
+                            </Modal.Header>
+
+                            <Modal.Body>
+                                <p>Are you sure you would like to delete your account? This process cannot be reversed.</p>
+                            </Modal.Body>
+
+                            <Modal.Footer>
+                                <Button variant="danger"  onClick={handleDeleteAccount} >Yes, delete my account permanently. </Button>
+                                <Button variant="secondary" onClick={handleModalClose}>No, keep my account.</Button>
+                            </Modal.Footer>
+                        </Modal>
+                    </Navbar>
+
                 </Offcanvas.Body>
             </Offcanvas>
 
