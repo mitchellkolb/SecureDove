@@ -47,4 +47,26 @@
   .messages-button:hover {
     background-color: #0056b3;
   }
+
+  .btn_settings{
+    position: absolute;
+    bottom: 100px;
+    right: 40%;
+    
+  }
+
+  .btn_chats{
+    position: absolute;
+    bottom: 100px;
+  }
   
+  .btn_friends{
+    position: absolute;
+    bottom: 100px;
+    left: 40%;
+  }
+
+  .link_logout{
+    text-decoration: none;
+    color: inherit;
+  }
