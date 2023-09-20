@@ -1,30 +1,18 @@
 import './App.css';
 import Login from './Login';
-import Register from './Register';
-import Messages from './Messages';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { useState } from "react";
+
+import Messages from "./Messages";
 
 function App() {
-  return (
-    <Router>
-      <div className="App">
-        <header className="App-header">        
-          <Switch>
-            <Route exact path="/">
-              <Login />
-            </Route>
-            <Route path="/register">
-              <Register />
-            </Route>
-            <Route path="/messages">
-              <Messages />
-            </Route>
-            
-          </Switch>
-        </header>
-      </div>
-    </Router>
-  );
+  const [user, setUser] = useState();
+
+  if (!user) {
+    return <Login onLogin={(user) => setUser(user)} />;
+  } 
+  else {
+    return <Messages user={user} />;
+  }
 }
 
 export default App;

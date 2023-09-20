@@ -10,7 +10,7 @@ import Modal from 'react-bootstrap/Modal'; // for delete pop up
 import { useHistory } from "react-router-dom"; // for redirecting 
 import app_logo from './securedovelogo.png'
 
-function Messages() {
+const Messages = (props) => {
 
     const [dbInfo, setDbInfo] = useState("");
     const [messageId, setMessageId] = useState(0);
@@ -28,6 +28,7 @@ function Messages() {
     // delete account for backend
     const handleDeleteAccount = () => {
         // IMPLEMENT BACK END CODE HERE FOR DELETING USER
+        //userEmail = props.user.email // this is how you get the email of the currently logged in user. Won't work until register and log in are hooked up to backend
         alert('Account deleted!');
         handleModalClose();
         handleClose();
