@@ -68,7 +68,7 @@ def Default():
 #This is a endpoint that allow you to query the database at a certain index that is passed in at the frontend by the user in messages.js
 @app.get("/get_DB_info")
 def get_DB_info(message_id: int):
-    if message_id > 3:
+    if message_id > 4:
          rows = [('We dont have messages at that index right now. Try 1-3',)]
          return {"data": rows}
     else:
@@ -79,23 +79,26 @@ def get_DB_info(message_id: int):
 
 #Endpoint that adds a user to the Users table
 @app.post("/registration")
-async def registration(username: str, email: str, password: str):
+async def registration(username: str, email: str, password: str, confirmPassword: str):
     #Looping through Users until we find the lowest available user_id number
-    cur.execute(f"SELECT * FROM Users")
-    rows = cur.fetchall()
-    i = 1
-    for row in rows:
-         if i == row[0]:
-            i = i + 1
-            continue
-         else:
-              break
-    user_id = i
+    if (password==confirmPassword):
+        cur.execute(f"SELECT * FROM Users")
+        rows = cur.fetchall()
+        i = 1
+        for row in rows:
+            if i == row[0]:
+                i = i + 1
+                continue
+            else:
+                break
+        user_id = i
 
-    #Inserting into the database
-    cur.execute(f"INSERT INTO Users (user_id, username, email, password) VALUES ({user_id}, '{username}', '{email}', '{password}')")
-    conn.commit()
-    return {"success": True}
+        #Inserting into the database
+        cur.execute(f"INSERT INTO Users (user_id, username, email, password) VALUES ({user_id}, '{username}', '{email}', '{password}')")
+        conn.commit()
+        return {"success": True}
+    else:
+        return {"success": False}
 
 @app.post("/new_groupchat")
 async def new_groupchat(groupchat_name: str, created_by: int):
