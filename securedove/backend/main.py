@@ -91,8 +91,45 @@ async def registration(username: str, email: str, password: str):
          else:
               break
     user_id = i
-    print(user_id)
+
     #Inserting into the database
     cur.execute(f"INSERT INTO Users (user_id, username, email, password) VALUES ({user_id}, '{username}', '{email}', '{password}')")
     conn.commit()
     return {"success": True}
+
+@app.post("/new_groupchat")
+async def new_groupchat(groupchat_name: str, created_by: int):
+    #Looping through Groupchats until we find the lowest available groupchat_id number
+    cur.execute(f"SELECT * FROM Groupchats")
+    rows = cur.fetchall()
+    i = 1
+    for row in rows:
+         if i == row[0]:
+            i = i + 1
+            continue
+         else:
+              break
+    groupchat_id = i
+
+    #Inserting into the database
+    cur.execute(f"INSERT INTO Groupchats (groupchat_id, groupchat_name, created_by) VALUES ({groupchat_id}, '{groupchat_name}', '{created_by}')")
+    conn.commit()
+    return {"success": True}
+
+@app.post("/login")
+async def login(email: str, password: str):
+    # Grabbing the row that has the corresponding email 
+    try:
+        cur.execute(f"SELECT * FROM Users WHERE email = '{email}'")
+    except:
+        print("Email not found, click register to create a new account")
+    rows = cur.fetchall()
+
+    # Checking if the password matches
+    if rows[0][3] == password:
+        user_id = rows[0][0]
+        return {"success": True, "userID": user_id}
+    else:
+        print("Incorrect password")
+        return {"success": False, "Password": "Incorrect password"}
+
