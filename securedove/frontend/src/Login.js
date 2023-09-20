@@ -11,11 +11,18 @@ const Login = (props) => {
     const handleLogin = (e) => {
       e.preventDefault();
       console.log(email,password); // testing events
-    //   axios
-    //     .post("http://localhost:8000/login", { email, password })
-    //     .then((r) => props.onLogin({ ...r.data, password })) // NOTE: over-ride password
-    //     .catch((e) => console.log(JSON.stringify(e.response.data)));
+      axios
+        .post("http://localhost:8000/login", { email, password })
+        .then((r) => props.onLogin({ ...r.data, password })) // NOTE: over-ride password
+        .catch((e) => console.log(JSON.stringify(e.response.data)));
     };
+
+    // async function handleLogin(){
+    //     // console.log(username, email, password, confirmPassword); // this line is just for testing
+    //     const response = await fetch(`http://localhost:8000/login??email=${email}?password=${password}`);
+    //     const data = await response.json();
+    //     console.log(data.data[0][0]);
+    // }
     return (
         
         <Container className="mt-5">

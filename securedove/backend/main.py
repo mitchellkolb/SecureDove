@@ -121,6 +121,7 @@ async def new_groupchat(groupchat_name: str, created_by: int):
 
 @app.post("/login")
 async def login(email: str, password: str):
+    print("user:",email,"pass:", password)
     # Grabbing the row that has the corresponding email 
     try:
         cur.execute(f"SELECT * FROM Users WHERE email = '{email}'")

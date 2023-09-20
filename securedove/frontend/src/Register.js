@@ -12,17 +12,18 @@ const Register = (props) =>{
 
     const handleRegister = (e) => {
         e.preventDefault();
-        console.log(username, email, password, confirmPassword); // this line is just for testing
-        // axios
-        // .post("http://localhost:8000/register", {
-        //     username,
-        //     email,
-        //     password,
-        //     confirmPassword
-        // })
-        // .then((r) => props.onRegister({ ...r.data, password })) 
-        // .catch((e) => console.log(JSON.stringify(e.response.data)));
+        // console.log(username, email, password, confirmPassword); // this line is just for testing
+        axios
+            .post("http://localhost:8000/register", {
+                username,
+                email,
+                password,
+                confirmPassword
+            })
+            .then((r) => props.onRegister({ ...r.data, password })) 
+            .catch((e) => console.log(JSON.stringify(e.response.data)));
     };
+    
     return (
         <Container className="mt-0">
             <div className="row">
