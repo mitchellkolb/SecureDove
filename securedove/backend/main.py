@@ -68,8 +68,8 @@ def Default():
 #This is a endpoint that allow you to query the database at a certain index that is passed in at the frontend by the user in messages.js
 @app.get("/get_DB_info")
 def get_DB_info(message_id: int):
-    if message_id > 3:
-         rows = [('We dont have messages at that index right now. Try 1-3',)]
+    if message_id > 4:
+         rows = [('We dont have messages at that index right now. Try 1-4',)]
          return {"data": rows}
     else:
         cur.execute(f"SELECT message_text FROM Messages WHERE message_id = {message_id};")
