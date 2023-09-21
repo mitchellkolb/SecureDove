@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import './Register.css'
-import {Container, Form, Button} from 'react-bootstrap'
-import axios from "axios";
-import app_logo from './securedovelogo.png'
+import './Register.css';
+import {Container, Form, Button} from 'react-bootstrap';
+import app_logo from './securedovelogo.png';
+import api from './api';
 
 const Register = (props) =>{
     const [username, setUsername] = useState("");
@@ -10,25 +10,31 @@ const Register = (props) =>{
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const api = axios.create({
-        baseURL: 'http://localhost:8000', // fastapi on port 8000
-        withCredentials: true, // enable credentials
-      });
-
     const handleRegister = async (e) => {
+        console.log(username, email, password, confirmPassword); // test
         e.preventDefault();
-        try {
-            const response = await api.post('/register', {username, email, password, confirmPassword});
-            if (response.data.message === 'Register successful!') {
-                // redirect to login here
-                // history.push('/login')
-                console.log("Register successful!")
-            }
-            } catch (error) {
+        if (password !== confirmPassword){
+            console.log("Passwords don't match.");
+            // maybe create a popup that lets user know but for now we can check console
+        }
+        else{
+            try {
+                const response = await api.post('/register', {username, email, password});
+                if (response.data.message === 'Register successful!') {
+                    // redirect to login here
+                    // history.push('/login')
+                    console.log("Register successful!")
+                }
+                else {
+                    console.error('Register failed:', response.data.message);
+                }
+            } 
+            catch (error) {
                 console.error('Register failed:', error);
             }
+        }
     };
-    
+
     return (
         <Container className="mt-0">
             <div className="row">

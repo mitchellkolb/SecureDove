@@ -2,26 +2,22 @@ import React, {useState} from "react";
 import { Container, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import app_logo from './securedovelogo.png';
-import axios from "axios";
+import api from './api';
 
 const Login = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-  
-    const api = axios.create({
-        baseURL: 'http://localhost:8000', // fastapi on port 8000
-        withCredentials: true, // enable credentials
-      });
 
     const handleLogin = async (e) => {
-      e.preventDefault();
-    try {
-        const response = await api.post('/login', {email, password});
-        if (response.data.message === 'Login successful!') {
-            // redirect to messages here
-            console.log("Login successful!")
-        }
-        } catch (error) {
+        e.preventDefault();
+        try {
+            const response = await api.post('/login', {email, password});
+            if (response.data.message === 'Login successful!') {
+                // redirect to messages here
+                console.log("Login successful!")
+            }
+        } 
+        catch (error) {
             console.error('Login failed:', error);
         }
     };
