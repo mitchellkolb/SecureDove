@@ -8,21 +8,24 @@ const Login = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
   
-    const handleLogin = (e) => {
-      e.preventDefault();
-      console.log(email,password); // testing events
-      axios
-        .post("http://localhost:8000/login", { email, password })
-        .then((r) => props.onLogin({ ...r.data, password })) // NOTE: over-ride password
-        .catch((e) => console.log(JSON.stringify(e.response.data)));
-    };
+    const api = axios.create({
+        baseURL: 'http://localhost:8000', // fastapi on port 8000
+        withCredentials: true, // Enable sending credentials (cookies)
+      });
 
-    // async function handleLogin(){
-    //     // console.log(username, email, password, confirmPassword); // this line is just for testing
-    //     const response = await fetch(`http://localhost:8000/login??email=${email}?password=${password}`);
-    //     const data = await response.json();
-    //     console.log(data.data[0][0]);
-    // }
+    const handleLogin = async (e) => {
+      e.preventDefault();
+    try {
+        const response = await api.post('/login', {email, password});
+        if (response.data.message === 'Login successful') {
+            // redirect to messages here
+            console.log("Login successful")
+        }
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
+    };
+    
     return (
         
         <Container className="mt-5">

@@ -10,18 +10,23 @@ const Register = (props) =>{
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const handleRegister = (e) => {
+    const api = axios.create({
+        baseURL: 'http://localhost:8000', // fastapi on port 8000
+        withCredentials: true, // Enable sending credentials (cookies)
+      });
+
+    const handleRegister = async (e) => {
         e.preventDefault();
-        // console.log(username, email, password, confirmPassword); // this line is just for testing
-        axios
-            .post("http://localhost:8000/register", {
-                username,
-                email,
-                password,
-                confirmPassword
-            })
-            .then((r) => props.onRegister({ ...r.data, password })) 
-            .catch((e) => console.log(JSON.stringify(e.response.data)));
+        try {
+            const response = await api.post('/register', {username, email, password, confirmPassword});
+            if (response.data.message === 'Register successful!') {
+                // redirect to login here
+                // history.push('/login')
+                console.log("Register successful!")
+            }
+            } catch (error) {
+                console.error('Register failed:', error);
+            }
     };
     
     return (

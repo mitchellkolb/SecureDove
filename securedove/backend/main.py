@@ -10,26 +10,26 @@ from pydantic import BaseModel
 from typing import Optional, Union
 from secrets import token_hex
 from fastapi.middleware.cors import CORSMiddleware
-
-
-
 # import sys to get more detailed Python exception info
 import sys
-
 # import the connect library for psycopg2
 from psycopg2 import connect
-
 # import the error handling libraries for psycopg2
 from psycopg2 import OperationalError, errorcodes, errors
 
+# instead of variable parameters we need to use BaseModels for login and register
+class UserLogin(BaseModel):
+    email: str
+    password: str
 
-
+class UserRegister(BaseModel):
+    username: str
+    email: str
+    password: str
+    confirmPassword: str
 
 #First Instance of fastapi and the title for the docs page of FASTAPI
 app = FastAPI(title="SecureDove Backend")
-
-
-
 
 #Set up for connecting to the database
 origins = [
@@ -46,18 +46,15 @@ app.add_middleware(
 )
 
 try:
-        #Should really put line 50 into a secure file that doesn't go on github but until everyone can run this code i'll leave it in the file as is. Security wise this is bad procedure
-        conn = psycopg2.connect('postgres://wjjloedt:JXFCuJI7Di3CtZ-enIemY9J_m8VxNXpZ@berry.db.elephantsql.com/wjjloedt')
-        print('Connection Success!')
-        connectionsucceeded = True
+    #Should really put line 50 into a secure file that doesn't go on github but until everyone can run this code i'll leave it in the file as is. Security wise this is bad procedure
+    conn = psycopg2.connect('postgres://wjjloedt:JXFCuJI7Di3CtZ-enIemY9J_m8VxNXpZ@berry.db.elephantsql.com/wjjloedt')
+    print('Connection Success!')
+    connectionsucceeded = True
 except:
     print("Unable to connect to the database")
 
 # Open a cursor to execute SQL queries
 cur = conn.cursor()
-
-
-
 
 #default endpoint for the backend
 @app.get("/")
@@ -78,7 +75,7 @@ def get_DB_info(message_id: int):
         return {"data": rows}
 
 #Endpoint that adds a user to the Users table
-@app.post("/registration")
+@app.post("/register")
 async def registration(username: str, email: str, password: str, confirmPassword: str):
     #Looping through Users until we find the lowest available user_id number
     if (password==confirmPassword):
@@ -120,21 +117,25 @@ async def new_groupchat(groupchat_name: str, created_by: int):
     return {"success": True}
 
 @app.post("/login")
-async def login(email: str, password: str):
-    print("user:",email,"pass:", password)
+async def login(user: UserLogin):
+    print("user:",user.email,"pass:", user.password)
     # Grabbing the row that has the corresponding email 
     try:
-        cur.execute(f"SELECT * FROM Users WHERE email = '{email}'")
+        cur.execute(f"SELECT * FROM Users WHERE email = '{user.email}'")
     except:
         print("Email not found, click register to create a new account")
+        return {"message", "Email not linked to an account. Please create one."}
     rows = cur.fetchall()
 
     # Checking if the password matches
-    if rows[0][3] == password:
-        user_id = rows[0][0]
-        return {"success": True, "userID": user_id}
+    if rows[0][3] == user.password:
+        # we can have a global variable that gets updated with this line below in order to keep track of who's logged in.
+        # then, when we need to load messages we can check who's logged in by checking that global variable containing the current user's id. If it's 0 then no one is logged in.
+        # user_id = rows[0][0]
+        print("Correct Credentials.")
+        return {"message", "Login successful!"}
     else:
-        print("Incorrect password")
-        return {"success": False, "Password": "Incorrect password"}
+        print("Incorrect Credentials.")
+        return {"message", "Incorrect credentials."}
 
 #
