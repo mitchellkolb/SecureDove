@@ -6,13 +6,13 @@ import app_logo from './securedovelogo.png'
 
 const Register = (props) =>{
     const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState(""); 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const api = axios.create({
         baseURL: 'http://localhost:8000', // fastapi on port 8000
-        withCredentials: true, // Enable sending credentials (cookies)
+        withCredentials: true, // enable credentials
       });
 
     const handleRegister = async (e) => {

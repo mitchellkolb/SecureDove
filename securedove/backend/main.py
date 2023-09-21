@@ -18,6 +18,7 @@ from psycopg2 import connect
 from psycopg2 import OperationalError, errorcodes, errors
 
 # instead of variable parameters we need to use BaseModels for login and register
+# anytime that the front end sends data over to the backend we need a BaseModel to match it
 class UserLogin(BaseModel):
     email: str
     password: str
@@ -74,29 +75,6 @@ def get_DB_info(message_id: int):
         print(rows)
         return {"data": rows}
 
-#Endpoint that adds a user to the Users table
-@app.post("/register")
-async def registration(username: str, email: str, password: str, confirmPassword: str):
-    #Looping through Users until we find the lowest available user_id number
-    if (password==confirmPassword):
-        cur.execute(f"SELECT * FROM Users")
-        rows = cur.fetchall()
-        i = 1
-        for row in rows:
-            if i == row[0]:
-                i = i + 1
-                continue
-            else:
-                break
-        user_id = i
-
-        #Inserting into the database
-        cur.execute(f"INSERT INTO Users (user_id, username, email, password) VALUES ({user_id}, '{username}', '{email}', '{password}')")
-        conn.commit()
-        return {"success": True}
-    else:
-        return {"success": False}
-
 @app.post("/new_groupchat")
 async def new_groupchat(groupchat_name: str, created_by: int):
     #Looping through Groupchats until we find the lowest available groupchat_id number
@@ -138,4 +116,28 @@ async def login(user: UserLogin):
         print("Incorrect Credentials.")
         return {"message", "Incorrect credentials."}
 
-#
+#Endpoint that adds a user to the Users table
+@app.post("/register")
+async def register(user: UserRegister):
+    #Looping through Users until we find the lowest available user_id number
+    if (user.password==user.confirmPassword):
+        cur.execute(f"SELECT * FROM Users")
+        rows = cur.fetchall()
+        i = 1
+        for row in rows:
+            if i == row[0]:
+                i = i + 1
+                continue
+            else:
+                break
+        user_id = i
+
+        #Inserting into the database
+        # NOTE: in the future we need to check that the username and email don't already exist
+        cur.execute(f"INSERT INTO Users (user_id, username, email, password) VALUES ({user_id}, '{user.username}', '{user.email}', '{user.password}')")
+        conn.commit()
+        print("Register success.")
+        return {"message": "Register successful!"}
+    else:
+        print("Passwords don't match.")
+        return {"message": "Passwords don't match."}

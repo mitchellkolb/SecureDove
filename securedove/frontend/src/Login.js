@@ -10,22 +10,22 @@ const Login = (props) => {
   
     const api = axios.create({
         baseURL: 'http://localhost:8000', // fastapi on port 8000
-        withCredentials: true, // Enable sending credentials (cookies)
+        withCredentials: true, // enable credentials
       });
 
     const handleLogin = async (e) => {
       e.preventDefault();
     try {
         const response = await api.post('/login', {email, password});
-        if (response.data.message === 'Login successful') {
+        if (response.data.message === 'Login successful!') {
             // redirect to messages here
-            console.log("Login successful")
+            console.log("Login successful!")
         }
         } catch (error) {
             console.error('Login failed:', error);
         }
     };
-    
+
     return (
         
         <Container className="mt-5">
