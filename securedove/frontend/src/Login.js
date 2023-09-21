@@ -2,20 +2,26 @@ import React, {useState} from "react";
 import { Container, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import app_logo from './securedovelogo.png';
-import axios from "axios";
+import api from './api';
 
 const Login = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-  
-    const handleLogin = (e) => {
-      e.preventDefault();
-      console.log(email,password); // testing events
-    //   axios
-    //     .post("http://localhost:8000/login", { email, password })
-    //     .then((r) => props.onLogin({ ...r.data, password })) // NOTE: over-ride password
-    //     .catch((e) => console.log(JSON.stringify(e.response.data)));
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await api.post('/login', {email, password});
+            if (response.data.message === 'Login successful!') {
+                // redirect to messages here
+                console.log("Login successful!")
+            }
+        } 
+        catch (error) {
+            console.error('Login failed:', error);
+        }
     };
+
     return (
         
         <Container className="mt-5">

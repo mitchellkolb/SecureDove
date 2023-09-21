@@ -1,28 +1,40 @@
 import React, {useState} from "react";
-import './Register.css'
-import {Container, Form, Button} from 'react-bootstrap'
-import axios from "axios";
-import app_logo from './securedovelogo.png'
+import './Register.css';
+import {Container, Form, Button} from 'react-bootstrap';
+import app_logo from './securedovelogo.png';
+import api from './api';
 
 const Register = (props) =>{
     const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState(""); 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
+        console.log(username, email, password, confirmPassword); // test
         e.preventDefault();
-        console.log(username, email, password, confirmPassword); // this line is just for testing
-        // axios
-        // .post("http://localhost:8000/register", {
-        //     username,
-        //     email,
-        //     password,
-        //     confirmPassword
-        // })
-        // .then((r) => props.onRegister({ ...r.data, password })) 
-        // .catch((e) => console.log(JSON.stringify(e.response.data)));
+        if (password !== confirmPassword){
+            console.log("Passwords don't match.");
+            // maybe create a popup that lets user know but for now we can check console
+        }
+        else{
+            try {
+                const response = await api.post('/register', {username, email, password});
+                if (response.data.message === 'Register successful!') {
+                    // redirect to login here
+                    // history.push('/login')
+                    console.log("Register successful!")
+                }
+                else {
+                    console.error('Register failed:', response.data.message);
+                }
+            } 
+            catch (error) {
+                console.error('Register failed:', error);
+            }
+        }
     };
+
     return (
         <Container className="mt-0">
             <div className="row">
