@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import App from './App';
 import Register from "./Register";
 import Messages from "./Messages";
+import LogoPage from "./LogoPage"
 import "./App.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -16,7 +17,12 @@ root.render(
       <div className="App">
         <header className="App-header">        
           <Switch>
+            {/* Route for logo page */}
             <Route exact path="/">
+              <LogoPage />
+            </Route>
+
+            <Route path="/login">
               <App />
             </Route>
             <Route path="/register">
