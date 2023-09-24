@@ -156,7 +156,15 @@ def invite_user():
     pass
 
 def exit_groupchat():
-    pass
+    # Checks current users' user_id
+    current_user_id = "Current_id"
+    cur.execute(f"SELECT user_id FROM UserGroups")
+    rows = cur.fetchall()
+    if(current_user_id in rows):
+        cur.execute(f"DELETE FROM UserGroups WHERE user_id = {current_user_id}")
+        conn.commit()
+        return {"exitChat" : "Success"}
+    return {"exitChat" : "Failed"}
 
 def accept_invite():
     pass
