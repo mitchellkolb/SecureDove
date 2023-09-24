@@ -151,3 +151,15 @@ def delete_user(username: str):
         conn.commit()
         return {"accountDeletion":"Success"}
     return {"accountDeletion": "Failed"}
+
+def invite_user():
+    pass
+
+def exit_groupchat():
+    pass
+
+def accept_invite():
+    pass
+
+def reject_invite():
+    pass
