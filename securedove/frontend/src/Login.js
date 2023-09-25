@@ -3,6 +3,7 @@ import { Container, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import app_logo from './securedovelogo.png';
 import api from './api';
+import './Login.css'
 
 const Login = (props) => {
     const [email, setEmail] = useState("");
