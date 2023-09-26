@@ -36,7 +36,7 @@ const Register = (props) =>{
     };
 
     return (
-        <Container className="mt-0">
+        <Container className="mt-5">
             <div className="row">
                 <div className="col-md-12">
                     <img src={app_logo} alt="App-Logo" className="img-fluid centered-horizontally-image" />

@@ -1,16 +1,18 @@
-.login_form{
-    border-radius: 20px;
-    /* border: solid rgb(35, 88, 35); */
-    border-width: 5px;
+.mt-5 {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeIn 0.4s ease-in-out 0.4s forwards;
+
 }
 
-.login_form input {
-    color: green;
+@keyframes fadeIn {
+    to{
+        opacity: 1;
+        transform: translateY(0px);
+    }
 }
 
-.btn_login {
-    width: 20%;
-}
 
 
 
