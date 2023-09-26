@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom';
 import app_logo from './securedovelogo.png';
 import api from './api';
 import './Login.css'
+import { useHistory } from "react-router-dom"; // for redirecting 
 
 const Login = (props) => {
+    const history = useHistory();
+    
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -15,11 +18,13 @@ const Login = (props) => {
             const response = await api.post('/login', {email, password});
             if (response.data.message === 'Login successful!') {
                 // redirect to messages here
-                console.log("Login successful!")
+                console.log("Login successful!");
+                history.push("/messages");
             }
         } 
         catch (error) {
             console.error('Login failed:', error);
+            alert("The credentials you entered don't match our records.");
         }
     };
 

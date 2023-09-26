@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Modal from 'react-bootstrap/Modal'; // for delete pop up
 import { useHistory } from "react-router-dom"; // for redirecting 
-import app_logo from './securedovelogo.png'
 import './Messages.css';
+
 import {
     MDBContainer,
     MDBRow,

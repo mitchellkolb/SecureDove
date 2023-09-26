@@ -3,8 +3,11 @@ import './Register.css';
 import {Container, Form, Button} from 'react-bootstrap';
 import app_logo from './securedovelogo.png';
 import api from './api';
+import { useHistory } from "react-router-dom"; // for redirecting 
 
 const Register = (props) =>{
+    const history = useHistory();
+
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState(""); 
     const [password, setPassword] = useState("");
@@ -16,6 +19,7 @@ const Register = (props) =>{
         if (password !== confirmPassword){
             console.log("Passwords don't match.");
             // maybe create a popup that lets user know but for now we can check console
+            alert("The passwords you entered don't match.")
         }
         else{
             try {
@@ -24,13 +28,16 @@ const Register = (props) =>{
                     // redirect to login here
                     // history.push('/login')
                     console.log("Register successful!")
+                    history.push("/login");
                 }
                 else {
                     console.error('Register failed:', response.data.message);
+                    alert("Error registering. Please try again.")
                 }
             } 
             catch (error) {
                 console.error('Register failed:', error);
+                alert("Error registering. Please try again.")
             }
         }
     };
