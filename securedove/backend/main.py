@@ -154,15 +154,16 @@ def delete_user(username: str):
 
 # Invite User
 @app.post("/invite_user")
-def invite_user(username):
+def invite_user(user_id):
     # Checks if current user_id matches Groupchats.created by'
-    current_user_id = "Current user id"
-    group_creator_id = "Creator id"
-    if(current_user_id == group_creator_id):
+    cur.execute(f"SELECT * FROM Groupchats where groupchat_id = {CURRENT_USER}")
+    rows = cur.fetchall()
+    print(rows[0][3])
+    if(CURRENT_USER == rows[0][3]):
         cur.execute(f"SELECT user_id FROM UserGroups")
         rows = cur.fetchall()
-        if(username not in rows):
-            cur.execute(f"INSERT INTO UserGroups where user_id = {username}")
+        if(user_id not in rows):
+            cur.execute(f"INSERT INTO UserGroups where user_id = {user_id}")
             conn.commit()
             return {"inviteUser": "Success"}
         return {"inviteUser": "Failed"}
@@ -172,12 +173,11 @@ def invite_user(username):
 # Exit groupchat
 @app.post("/exit_groupchat")
 def exit_groupchat():
-    # Checks current users' user_id
-    current_user_id = "Current_id"
+    # Queries user_id in UserGroups
     cur.execute(f"SELECT user_id FROM UserGroups")
     rows = cur.fetchall()
-    if(current_user_id in rows):
-        cur.execute(f"DELETE FROM UserGroups WHERE user_id = {current_user_id}")
+    if(CURRENT_USER in rows):
+        cur.execute(f"DELETE FROM UserGroups WHERE user_id = {CURRENT_USER}")
         conn.commit()
         return {"exitChat" : "Success"}
     return {"exitChat" : "Failed"}
@@ -186,11 +186,10 @@ def exit_groupchat():
 @app.post("/join_groupchat")
 def join_groupchat():
     # Checks current users' user_id
-    current_user_id = "Current_id"
     cur.execute(f"SELECT user_id FROM Users")
     rows = cur.fetchall()
-    if(current_user_id in rows):
-        cur.execute(f"INSERT INTO UserGroups WHERE user_id = {current_user_id}")
+    if(CURRENT_USER in rows):
+        cur.execute(f"INSERT INTO UserGroups WHERE user_id = {CURRENT_USER}")
         conn.commit()
         return {"acceptInvite" : "Success"}
     return {"exitChat" : "Failed"}
