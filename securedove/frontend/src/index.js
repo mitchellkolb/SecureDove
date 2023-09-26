@@ -7,8 +7,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import App from './App';
 import Register from "./Register";
 import Messages from "./Messages";
-import LogoPage from "./LogoPage"
+import LogoPage from "./LogoPage";
 import "./App.css";
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -21,7 +23,7 @@ root.render(
             <Route exact path="/">
               <LogoPage />
             </Route>
-
+            
             <Route path="/login">
               <App />
             </Route>
