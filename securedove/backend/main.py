@@ -152,6 +152,8 @@ def delete_user(username: str):
         return {"accountDeletion":"Success"}
     return {"accountDeletion": "Failed"}
 
+# Invite User
+@app.post("/invite_user")
 def invite_user(username):
     # Checks if current user_id matches Groupchats.created by'
     current_user_id = "Current user id"
@@ -163,8 +165,12 @@ def invite_user(username):
             cur.execute(f"INSERT INTO UserGroups where user_id = {username}")
             conn.commit()
             return {"inviteUser": "Success"}
-    return {"inviteUser": "Failed"}
+        return {"inviteUser": "Failed"}
+    else:
+        print("User is not authorized to invite users")
 
+# Exit groupchat
+@app.post("/exit_groupchat")
 def exit_groupchat():
     # Checks current users' user_id
     current_user_id = "Current_id"
@@ -176,6 +182,8 @@ def exit_groupchat():
         return {"exitChat" : "Success"}
     return {"exitChat" : "Failed"}
 
+# Accepts user to join usergroup
+@app.post("/join_groupchat")
 def join_groupchat():
     # Checks current users' user_id
     current_user_id = "Current_id"
@@ -187,5 +195,6 @@ def join_groupchat():
         return {"acceptInvite" : "Success"}
     return {"exitChat" : "Failed"}
 
+# Return to print the reject message
 def reject_invite():
     print("PRINT TO UI: Invitation Rejected")
