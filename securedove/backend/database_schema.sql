@@ -32,11 +32,21 @@ CREATE TABLE Messages (
     message_text TEXT NOT NULL,
     sent_by INT,
     sent_in INT,
+    time_sent TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     FOREIGN KEY (sent_by) REFERENCES Users(user_id),
     FOREIGN KEY (sent_in) REFERENCES Groupchats(groupchat_id)
 );
 
-
+/*
+UserGroups Table stores the information of the groups that the user is associated with.
+*/
+CREATE TABLE UserGroups (
+    user_group_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    groupchat_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (groupchat_id) REFERENCES Groupchats(group_id)
+);
 /*
 
 This is some of the test data I inserted into the database
