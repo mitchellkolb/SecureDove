@@ -8,6 +8,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Modal from 'react-bootstrap/Modal'; // for delete pop up
 import { useHistory } from "react-router-dom"; // for redirecting 
 import './Messages.css';
+import api from './api'; // fetch origin of fastapi backend
 
 import {
     MDBContainer,
@@ -36,13 +37,27 @@ const Messages = (props) => {
     // for redirecting to log in page
     const history = useHistory();
     // delete account for backend
-    const handleDeleteAccount = () => {
-        // IMPLEMENT BACK END CODE HERE FOR DELETING USER
-        //userEmail = props.user.email // this is how you get the email of the currently logged in user. Won't work until register and log in are hooked up to backend
-        alert('Account deleted!');
-        handleModalClose();
-        handleClose();
-        history.push('/');
+    const handleDeleteAccount = async(e) => {
+        // REACHING BACKEND TO DELETE A USER. CODE IMPLEMENTED ON FE SIDE ALREADY. UNCOMMENT WHEN BE IS FINISHED WITH /DELETE ENDPOINT
+        // e.preventDefault();
+        // try {
+        //     const response = await api.post('/delete');
+        //     if (response.data.message === 'Delete Successful!') {
+        //         // redirect to login here
+        //         // history.push('/login')
+        //         console.log("Delete Successful.")
+        //         alert('Account deleted!');
+        //         // close pop up windows and sidebar
+        //         handleModalClose();
+        //         handleClose();
+        //         // redirect to app register page
+        //         history.push('/register');
+        //     }
+        // } 
+        // catch (error) {
+        //     console.error('Delete failed:', error);
+        //     alert("Error deleting account. Please try again.")
+        // }
     };
 
     async function fetchDBInfo() {
