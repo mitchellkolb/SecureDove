@@ -81,14 +81,12 @@
 .chat-container {
   display: flex;
   flex-direction: row;
-  height: 90vh; /* This sets the height to the full viewport height */
-  margin-top: 50px;
 }
 
 .settings-container {
   position: relative;
-  top: 10%;
-  right: 50%;
+  top: 15%;
+  right: 55%;
 }
 
 .py-5 {
