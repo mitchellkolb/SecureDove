@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Container, Form, Button} from 'react-bootstrap'
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -36,29 +36,93 @@ const Messages = (props) => {
 
     // for redirecting to log in page
     const history = useHistory();
+
+    const handleLogout = async(e) => {
+        console.log("Inside logout");
+        e.preventDefault();
+        try{
+            const response = await api.post('/logout');
+            if (response.data.message === 'Logout successful!'){
+                console.log("Logging out.");
+                alert('Logging out.');
+                history.push('/login')
+            }
+        }
+        catch(error){
+            console.error('Logout timed out:', error);
+            alert("Request timed out! Please try again.");
+        }
+    }
+
     // delete account for backend
     const handleDeleteAccount = async(e) => {
         // REACHING BACKEND TO DELETE A USER. CODE IMPLEMENTED ON FE SIDE ALREADY. UNCOMMENT WHEN BE IS FINISHED WITH /DELETE ENDPOINT
-        // e.preventDefault();
-        // try {
-        //     const response = await api.post('/delete');
-        //     if (response.data.message === 'Delete Successful!') {
-        //         // redirect to login here
-        //         // history.push('/login')
-        //         console.log("Delete Successful.")
-        //         alert('Account deleted!');
-        //         // close pop up windows and sidebar
-        //         handleModalClose();
-        //         handleClose();
-        //         // redirect to app register page
-        //         history.push('/register');
-        //     }
-        // } 
-        // catch (error) {
-        //     console.error('Delete failed:', error);
-        //     alert("Error deleting account. Please try again.")
-        // }
+        e.preventDefault();
+        try {
+            const response = await api.post('/delete_user');
+            if (response.data.message === 'Deletion successful!') {
+                console.log("Delete Successful.")
+                alert('Account deleted!');
+                // close pop up windows and sidebar
+                handleModalClose();
+                handleClose();
+                // redirect to app register page
+                history.push('/register');
+            }
+        } 
+        catch (error) {
+            console.error('Delete failed:', error);
+            alert("Error deleting account. Please try again.")
+        }
     };
+
+    // LOAD ACTIVE CHATS AND MESSAGES FOR CHAT THATS OPENED
+    // const [activeChats, setActiveChats] = useState([]);
+    // useEffect(() => {
+    // // send request to endpoint to load active conversations
+    //     async function fetchActiveChats() {
+    //         try {
+    //             const response = await api.get('/get_active_chats'); // needs to be changed to FastAPI endpoint name
+    //             setActiveChats(response.data);
+    //         } 
+    //         catch (error) {
+    //             console.error('Error loading active chats:', error);
+    //         }
+    //     }
+    //     // call function for the first time when component loads
+    //     fetchActiveChats();
+    //     // call fetchActiveChats() every 1000 milliseconds (or every 1 second)
+    //     const activeChatsInterval = setInterval(fetchActiveChats, 1000);
+    //     // turn off interval when app closes.
+    //     return () => {
+    //         clearInterval(activeChatsInterval);
+    //     };
+    // }, []);
+
+    // const [currMessages, setCurrMessages] = useState([]);
+    // useEffect(() => {
+    // // Function to fetch data from the FastAPI endpoint
+    //     async function fetchCurrMessages() {
+    //         // need a way to know which conversation the user has clicked on in order to load the right messages
+    //         try {
+    //             // this endpoints needs to return an array with each item having this format:
+    //             //{message_id, sender/receiver username, message_text, timestamp, isSender bool (true for sender, false for receiver)}
+    //             const response = await api.get('/get_messages'); // needs to be changed to FastAPI endpoint name
+    //             setCurrMessages(response.data);
+    //         } 
+    //         catch (error) {
+    //             console.error('Error loading messages:', error);
+    //         }
+    //     }
+    //     // might be beneficial to move the right side of the ui that displays the message history to a different component.
+    //     fetchCurrMessages();
+    //     const currMessagesInterval = setInterval(fetchCurrMessages, 1000);
+
+    //     return () => {
+    //         clearInterval(currMessagesInterval);
+    //     };
+    // }, []);
+
 
     async function fetchDBInfo() {
         const response = await fetch(`http://localhost:8000/get_DB_info?message_id=${messageId}`);
@@ -183,10 +247,10 @@ const Messages = (props) => {
                                     
                                                 <Navbar className="bg-body-tertiary">
                                                     <Container>
-                                                        <Link to="/" className="link_logout">
-                                                            <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+                                                        <Button className="btn btn-primary" style={{ width: '200px' }} onClick={handleLogout}>
+                                                            <FontAwesomeIcon icon={faSignOutAlt} className="me-2"/>
                                                                 Logout
-                                                        </Link>
+                                                        </Button>
                                                                 
                                                     </Container>
                                                 </Navbar>
@@ -194,7 +258,7 @@ const Messages = (props) => {
 
                                                 <Navbar className="bg-body-tertiary">
                                                     <Container>
-                                                        <Button variant="danger" onClick={handleModalShow}>
+                                                        <Button variant="danger" style={{ width: '200px' }} onClick={handleModalShow}>
                                                             <FontAwesomeIcon icon={faTrash} className="me-2" />
                                                                 Delete Account
                                                         </Button>         
@@ -251,7 +315,7 @@ const Messages = (props) => {
                                             {/* Friend 2 */}
                                             <li className="p-2 border-bottom">
                                                 <a href="#chat2" className="d-flex justify-content-between">
-                                                    <div class="d-flex flex-row">
+                                                    <div className="d-flex flex-row">
                                                         <div>
                                                             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" className="d-flex align-self-center me-3"
                                                             width="60"/>

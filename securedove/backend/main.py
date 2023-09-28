@@ -110,6 +110,7 @@ async def login(user: UserLogin):
     if rows[0][3] == user.password:
         # we can have a global variable that gets updated with this line below in order to keep track of who's logged in.
         # then, when we need to load messages we can check who's logged in by checking that global variable containing the current user's id. If it's 0 then no one is logged in.
+        global CURRENT_USER
         CURRENT_USER = rows[0][0] # update current logged in user to this user_id. We will reference this for deleting an user and showing groupchats.
         print("CURRENT_USER", CURRENT_USER)
         print("Correct Credentials.")
@@ -140,18 +141,48 @@ async def register(user: UserRegister):
     print("Register success.")
     return {"message": "Register successful!"}
 
-#Endpoint that deletes a user from the Users table
-@app.delete("/delete_user")
-def delete_user(username: str):
-    cur.execute(f"SELECT username FROM Users")
-    rows = cur.fetchall()
-    if(username in rows):
-        # Delete user based on username input
-        cur.execute(f"DELETE FROM Users WHERE username = '{username}';")
-        conn.commit()
-        return {"accountDeletion":"Success"}
-    return {"accountDeletion": "Failed"}
+# endpoint to reset CURRENT_USER when user logs out
+@app.post("/logout")
+async def logout():
+    global CURRENT_USER
+    CURRENT_USER = 0
+    print("CURRENT USER:", CURRENT_USER)
+    return {"message":"Logout successful!"}
 
+#Endpoint that deletes a user from the Users table
+# @app.delete("/delete_user")
+# def delete_user(username: str):
+#     cur.execute(f"SELECT username FROM Users")
+#     rows = cur.fetchall()
+#     if(username in rows):
+#         # Delete user based on username input
+#         cur.execute(f"DELETE FROM Users WHERE username = '{username}';")
+#         conn.commit()
+#         return {"accountDeletion":"Success"}
+#     return {"accountDeletion": "Failed"}
+
+#Deletes user based on CURRENT_USER global variable, then resets it to 0
+@app.post("/delete_user")
+async def delete_user():
+    global CURRENT_USER
+    # print("inside delete")
+    print("CURRENT USER",CURRENT_USER)
+    if (CURRENT_USER!=0):
+        try:
+            # print("before query")
+            cur.execute(f'DELETE FROM Users WHERE user_id = {CURRENT_USER};')
+            conn.commit()
+            # print("after query")
+        except:
+            print("Error deleting user.")
+            return{"error": "Error accessing database."}
+        print("Successfully deleted user with id=", CURRENT_USER)
+        CURRENT_USER = 0
+        return {"message": "Deletion successful!"}
+    else:
+        print("No user is currently logged in.")
+        return {"error": "No user is currently logged in."}
+    
 # Invite User
 @app.post("/invite_user")
 def invite_user(user_id):
