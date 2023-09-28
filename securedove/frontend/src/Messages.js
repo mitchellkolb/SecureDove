@@ -387,9 +387,11 @@ const Messages = (props) => {
                                             id="exampleFormControlInput2"
                                             placeholder="Type message"/>
 
-                                        <a className="ms-1 text-muted" href="#Attachment">
-                                            <MDBIcon fas icon="paperclip" />
-                                        </a>
+                                        <div className="attachment ms-3" style={{cursor: 'pointer'}}>
+                                            <label for="fileInput"> <MDBIcon fas icon="paperclip"/> </label>
+                                            <input type="file" id="fileInput" style={{display: 'none'}} />
+                                        </div>
+                                        
                                         <a className="ms-3 text-muted" href="#emoji">
                                             <MDBIcon fas icon="smile" />
                                         </a>
