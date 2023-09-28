@@ -284,7 +284,7 @@ const Messages = (props) => {
                                     </div>
 
                                     {/* Chat panel */}
-                                    <div className="p-3">
+                                    <div className="p-5">
                                         <MDBInputGroup className="rounded mb-3">
                                             <input className="form-control rounded" placeholder="Search" type="search"/>
                                         </MDBInputGroup>
@@ -343,7 +343,7 @@ const Messages = (props) => {
                                     {/* We map over the array to render messages */}
 
                                     {/* Use overflow to make messages scrollable */}
-                                    <div className="chat-messages" style={{ maxHeight: '900px', overflowY: 'auto' }}>
+                                    <div className="chat-messages ps-2 pt-2 pe-2" style={{ maxHeight: '900px', overflowY: 'auto' }}>
                                         {messages.map((message) => (
                                             // It the messages is sent by current user, we justify-content-start
                                             // But if the messages is received by current user, we justify-content-end
@@ -375,7 +375,7 @@ const Messages = (props) => {
                                         ))}
                                     </div>
                                     
-                                    <div className="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2">
+                                    <div className="text-muted d-flex justify-content-start align-items-center pe-3 st-3">
                                         <img
                                         src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
                                             style={{ width: "40px", height: "100%" }}/>
