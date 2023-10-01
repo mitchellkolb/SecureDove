@@ -106,10 +106,9 @@ async def register(user: UserRegister):
         print("Could not retrieve Users table.")
         return {"error": "Couldn't load database."}
     row = cur.fetchall()
-    # row returns as [(8,)] or whatever the latest value is
-    next_id = row[0][0]+1
+
     try:
-        cur.execute(f"INSERT INTO Users (user_id, username, email, password) VALUES ({next_id}, '{user.username}', '{user.email}', '{user.password}');")
+        cur.execute(f"INSERT INTO Users (username, email, password) VALUES ('{user.username}', '{user.email}', '{user.password}');")
         conn.commit()
     except:
         print("Error inserting user to table.")
