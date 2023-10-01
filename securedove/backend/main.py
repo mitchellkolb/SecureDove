@@ -231,7 +231,7 @@ def join_groupchat():
 def reject_invite():
     print("PRINT TO UI: Invitation Rejected")
 
-
+#
 # Gives a snapshot of the chats for the side bar of the logged in user. It gives the other user that is in the chat and the last message sent with its timestamp
 # Returns all chats for that user based off of user_id. Each chat returned will have the chat_id, Other username, last message sent, last message timestamp
 @app.get("/left_bar_chat")
