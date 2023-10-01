@@ -99,14 +99,6 @@ async def login(user: UserLogin):
 #Endpoint that adds a user to the Users table
 @app.post("/register")
 async def register(user: UserRegister):
-    #Looping through Users until we find the lowest available user_id number
-    try:
-        cur.execute("SELECT user_id FROM Users ORDER BY user_id DESC LIMIT 1;") # selects the last user_id in the Users table
-    except:
-        print("Could not retrieve Users table.")
-        return {"error": "Couldn't load database."}
-    row = cur.fetchall()
-
     try:
         cur.execute(f"INSERT INTO Users (username, email, password) VALUES ('{user.username}', '{user.email}', '{user.password}');")
         conn.commit()
@@ -135,36 +127,19 @@ async def delete_user(user_id: int):
 # View list of invitations for that user
 @app.get("/view_invite")
 def view_invite(user_id: int):
-    cur.execute(f"SELECT username FROM Users WHERE user_id = {user_id}")
-    rows = cur.fetchall()
-    print(rows)
-    return {"Error" : "Ok"}
+    print("s")
 
 # Create new invitation to chat from one user to another
 @app.post("/new_invite")
-def new_invite(user_id: int):
-    # Checks if current user_id matches Groupchats.created by'
-    cur.execute(f"SELECT * FROM Groupchats where groupchat_id = {CURRENT_USER}")
-    rows = cur.fetchall()
-    print(rows[0][3])
-    if(CURRENT_USER == rows[0][3]):
-        cur.execute(f"SELECT user_id FROM UserGroups")
-        rows = cur.fetchall()
-        if(user_id not in rows):
-            cur.execute(f"INSERT INTO UserGroups where user_id = {user_id}")
-            conn.commit()
-            return {"inviteUser": "Success"}
-        return {"inviteUser": "Failed"}
-    else:
-        print("User is not authorized to invite users")
+def new_invite(user_id: int, newUser: str):
+    print("s")
+
 
 # Decide, Reject or Accept for an existing invite
 @app.get("/decide_invite")
-def decide_invite(user_id: int, decision: str):
-    cur.execute(f"SELECT username FROM Users WHERE user_id = {user_id}")
-    rows = cur.fetchall()
-    print(rows)
-    return {"Error" : "Ok"}
+def decide_invite(invite_id: int, decision: str):
+    print("s")
+
 
 
 
