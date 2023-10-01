@@ -124,16 +124,55 @@ async def delete_user(user_id: int):
 
 # ---------------------   INVITATION ENDPOINTS -----------------------
 
-# View list of invitations for that user based on the user_id
+# View list of invitations for that user based on the user_id. Should only be pending invites in the database
 @app.get("/view_invite")
 def view_invite(user_id: int):
-    print("s")
+    
+    try:
+        cur.execute(f"SELECT * FROM Invitations where invitee_id = '{user_id}'") 
+    except:
+        print("Could not retrieve any invitations from database")
+        return {"error":"Could not retrieve any invitations from database"}
+    
+    rows = cur.fetchall()
+
+    for tup in rows:
+        inviter_id = tup[1]
+        try:
+            cur.execute(f"SELECT username FROM Users where user_id = '{inviter_id}'") 
+        except:
+            print("Could not retrieve any invitations from database")
+            return {"error":"Could not retrieve any invitations from database"}
+        rows2 = cur.fetchall()
+        username = rows2[0][0]
+        print("You have an invite from: ", username)
+    
+    print("You have successfully displayed all of the invites")
+    return {"message":"You have successfully displayed all of the invites"}
 
 # Create new invitation to chat from one user to another. 
 # newUser is a string that is the user email becuase all emails are unique in the database.
 @app.post("/new_invite")
-def new_invite(user_id: int, newUser: str):
-    print("s")
+def new_invite(inviter_user_id: int, newUser: str):
+    
+    print(inviter_user_id, newUser)
+    try:
+        cur.execute(f"SELECT * FROM Users where email = '{newUser}'") 
+        rows = cur.fetchall()
+        invitee_user_id = rows[0][0]
+    except:
+        print("Could not retrieve User from database")
+        return {"error":"Could not retrieve User from database"}
+
+
+    try:
+        cur.execute(f"INSERT INTO Invitations (inviter_id, invitee_id) VALUES ('{inviter_user_id}', '{invitee_user_id}')")
+        conn.commit()
+        return {"message": "Invite sent successfully"}
+    except:
+        print("Failure inserting into the Invitations table")
+        return {"error":"Failure inserting into the Invitations table"}
+    
 
 
 # Decide, Reject or Accept for an existing invite. the decision parameter is a bool so 0 = REJECT and 1 = ACCEPT
@@ -142,7 +181,42 @@ def new_invite(user_id: int, newUser: str):
 # Only pending invites should be in the table.
 @app.get("/decide_invite")
 def decide_invite(invite_id: int, decision: bool):
-    print("s")
+    # True means the invite was accepted
+    if decision == True:
+        try:
+            cur.execute(f"SELECT * FROM Invitations where invitation_id = {invite_id}") 
+        except:
+            print("Could not retrieve Invitation from database")
+            return {"error":"Could not retrieve Invitation from database"}
+        rows = cur.fetchall()
+    
+        user_id1 = rows[0][1]
+        user_id2 = rows[0][2]
+        print(user_id1, user_id2)
+
+        try:
+            cur.execute(f"DELETE FROM Invitations WHERE invitation_id = {invite_id}")
+            conn.commit()
+        except:
+            print("Could not delete the invitation from the database")
+            return {"error":"Could not delete the invitation from the database"}
+
+        try:
+            cur.execute(f"INSERT INTO Chats (user1_id, user2_id) VALUES ('{user_id1}', '{user_id2}')")
+            conn.commit()
+            return {"message": "Invite accepted successfully"}
+        except:
+            print("Failure inserting into the Chats table")
+            return {"error":"Failure inserting into the Chats table"}
+    # Invite was declined
+    else:
+        try:
+            cur.execute(f"DELETE FROM Invitations WHERE invitation_id = {invite_id}")
+            conn.commit()
+        except:
+            print("Could not delete the invitation from the database")
+            return {"error":"Could not delete the invitation from the database"}
+        return {"message": "Invite declined successfully"}
 
 
 
