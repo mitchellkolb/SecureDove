@@ -56,6 +56,12 @@ const Messages = (props) => {
                 if (response.data.left_chat_data !== undefined){
                     setActiveChats(response.data.left_chat_data);
                     console.log(activeChats);
+                    for (let i =0; i < response.data.left_chat_data.length; i++){
+                        // Chat_id, "Other User",  "Last Message", "Timestamp"
+                        console.log(response.data.left_chat_data[i]["Other User"]);
+                        console.log(response.data.left_chat_data[i]["Last Message"]);
+                        console.log(response.data.left_chat_data[i]["Timestamp"]);
+                    }
                 } 
                 else{
                     console.log("left chat data empty.")
@@ -384,49 +390,25 @@ const Messages = (props) => {
                                         </MDBInputGroup>
 
                                         <MDBTypography listUnStyled className="mb-0" >
-                                            {/* Friend 1 */}
-                                            <li className="p-2 border-bottom">                                            
-                                                <a href="#chat1" className="d-flex justify-content-between">
+                                        {activeChats.map((chat) => (
+                                            <li key={chat.Chat_id} className="p-2 border-bottom">
+                                                <a href={`#chat${chat.Chat_id}`} className="d-flex justify-content-between">
                                                     <div className="d-flex flex-row">
                                                         <div>
                                                             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" className="d-flex align-self-center me-3"
-                                                                width="80"/>
-                                                            <span className="badge bg-success badge-dot"></span>
+                                                                        width="80"/>
                                                         </div>
-                                                        
                                                         <div className="pt-1">
-                                                            <p className="fw-bold mb-0">Tom Cruise</p>
-                                                            <p className="small text-muted"> Hi, wassup?</p>
+                                                            <p className="fw-bold mb-0">{chat["Other User"]}</p>
+                                                            <p className="small text-muted">{chat["Last Message"]}</p>
                                                         </div>
                                                     </div>
                                                     <div className="pt-1">
-                                                        <p className="small text-muted mb-1">Just now</p>
-                                                        <span className="badge bg-danger rounded-pill float-end">3</span>
+                                                        <p className="small text-muted mb-1">{chat["Timestamp"]}</p>
                                                     </div>
                                                 </a>
                                             </li>
-
-                                            {/* Friend 2 */}
-                                            <li className="p-2 border-bottom">
-                                                <a href="#chat2" className="d-flex justify-content-between">
-                                                    <div className="d-flex flex-row">
-                                                        <div>
-                                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" className="d-flex align-self-center me-3"
-                                                            width="60"/>
-                                                            <span className="badge bg-warning badge-dot"></span>
-                                                        </div>
-                                                        <div className="pt-1">
-                                                            <p className="fw-bold mb-0">Megan Fox</p>
-                                                            <p className="small text-muted">Yoo bro</p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="pt-1">
-                                                        <p className="small text-muted mb-1"> 5 mins ago</p>
-                                                        <span className="badge bg-danger rounded-pill float-end"> 2</span>
-                                                    </div>
-                                                </a>
-                                            </li>
+                                            ))}
                                         </MDBTypography>
                                     </div>
                                 </MDBCol>
