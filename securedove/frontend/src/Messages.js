@@ -151,11 +151,35 @@ const Messages = (props) => {
 
     async function handleChatOpened(chat_id) {
         console.log("Trying to load chat with id=",chat_id);
+        const messages = [];
+        var id;
+        var sender;
+        var text;
+        var timestamp;
+        var isSender;
         try{
             const response = await api.get(`/load_chat/${chat_id}`);
             if (response.data.chat_data !== undefined){
                 setMessages(response.data.chat_data);
                 console.log(response.data.chat_data);
+                for (let i = 0; i < response.data.chat_data.length; i++){
+                    // "Sender Username", Message, Timestamp
+                    console.log(response.data.chat_data[i]["Sender Username"]);
+                    console.log(response.data.chat_data[i].Message);
+                    console.log(response.data.chat_data[i].Timestamp);
+                    //id: 3,
+                    //sender: 'Sender Name',
+                    //text: 'Not much!',
+                    //timestamp: '12:22 PM | Sep 25',
+                    //isSender: true,
+                    if (response.data.chat_data[i]["Sender Username"] === username){
+                        isSender = true;
+                    }
+                    else{
+                        isSender = false;
+                    }
+
+                }
             }
             else{
                 console.log("No chat history. Something's wrong.");
