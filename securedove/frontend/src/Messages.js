@@ -9,6 +9,7 @@ import Modal from 'react-bootstrap/Modal'; // for delete pop up
 import { useHistory } from "react-router-dom"; // for redirecting 
 import './Messages.css';
 import api from './api'; // fetch origin of fastapi backend
+import { user_id } from "./Login";
 
 import {
     MDBContainer,
@@ -38,36 +39,27 @@ const Messages = (props) => {
     const history = useHistory();
 
     const handleLogout = async(e) => {
-        console.log("Inside logout");
-        e.preventDefault();
-        try{
-            const response = await api.post('/logout');
-            if (response.data.message === 'Logout successful!'){
-                console.log("Logging out.");
-                alert('Logging out.');
-                history.push('/login')
-            }
-        }
-        catch(error){
-            console.error('Logout timed out:', error);
-            alert("Request timed out! Please try again.");
-        }
+            e.preventDefault();
+        console.log("Logging out.");
+        alert('Logging out.');
+        history.push('/');
     }
 
     // delete account for backend
     const handleDeleteAccount = async(e) => {
+        console.log("About to delete user ",user_id);
         // REACHING BACKEND TO DELETE A USER. CODE IMPLEMENTED ON FE SIDE ALREADY. UNCOMMENT WHEN BE IS FINISHED WITH /DELETE ENDPOINT
         e.preventDefault();
         try {
-            const response = await api.post('/delete_user');
+            const response = await api.post('/delete_user', {user_id});
             if (response.data.message === 'Deletion successful!') {
                 console.log("Delete Successful.")
                 alert('Account deleted!');
                 // close pop up windows and sidebar
                 handleModalClose();
                 handleClose();
-                // redirect to app register page
-                history.push('/register');
+                // redirect to app home page
+                history.push('/');
             }
         } 
         catch (error) {

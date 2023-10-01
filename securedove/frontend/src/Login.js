@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Container, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import app_logo from './securedovelogo.png';
@@ -6,7 +6,16 @@ import api from './api';
 import './Login.css'
 import { useHistory } from "react-router-dom"; // for redirecting 
 
+// keeps track of who's logged in
+var user_id = 0;
+
 const Login = (props) => {
+    // reset user_id to 0 when page loads.
+    useEffect(() => {
+        user_id = 0;
+        console.log("userid=",user_id)
+    }, []);
+
     const history = useHistory();
     
     const [email, setEmail] = useState("");
@@ -16,9 +25,11 @@ const Login = (props) => {
         e.preventDefault();
         try {
             const response = await api.post('/login', {email, password});
-            if (response.data.message === 'Login successful!') {
+            if (response.data.message !== 0) {
                 // redirect to messages here
                 console.log("Login successful!");
+                user_id = response.data.message; // temp for now. Later make it so that its loaded from backend reply
+                console.log("userid=",user_id)
                 history.push("/messages");
             }
         } 
@@ -60,5 +71,5 @@ const Login = (props) => {
         </Container>
     );
 }
-
+export {user_id};
 export default Login;
