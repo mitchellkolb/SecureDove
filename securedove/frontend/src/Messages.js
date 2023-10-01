@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import {Container, Form, Button} from 'react-bootstrap'
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faUser, faUserFriends,faSignOutAlt, faCircle, faComments, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faUser, faMessage,faSignOutAlt, faCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Modal from 'react-bootstrap/Modal'; // for delete pop up
@@ -67,6 +67,29 @@ const Messages = (props) => {
             alert("Error deleting account. Please try again.")
         }
     };
+
+    // For create new chat modal
+    const [showNewChatModal, setNewChatModalShow] = useState(false);
+    const handleNewChatModalClose = () => {
+        setNewChatModalShow(false);  
+    }  
+    const handleNewChatModalShow = () => setNewChatModalShow(true);
+
+    // Show success message after chat invite has been sent
+    const [showSuccess, setShowSuccess] = useState(false);
+
+    const handleNewChatModalCreate = () => {
+        setShowSuccess(true);
+        setNewChatModalShow(false)
+        
+    }
+
+    const handleCloseSuccess = () => {
+        setShowSuccess(false);
+    }
+    
+    
+
 
     // LOAD ACTIVE CHATS AND MESSAGES FOR CHAT THATS OPENED
     // const [activeChats, setActiveChats] = useState([]);
@@ -234,6 +257,47 @@ const Messages = (props) => {
                                                         </Navbar.Brand>
                                                     </Container>
                                                         
+                                                </Navbar>
+                                                <br/>
+
+                                                <Navbar className="bg-body-tertiary">
+                                                    <Container>
+                                                        <Navbar.Brand href="#home" onClick={handleNewChatModalShow}>
+                                                            <FontAwesomeIcon icon={faMessage} className="me-2" />
+                                                                    Create New Chat
+                                                        </Navbar.Brand>
+                                                    </Container>
+
+
+                                                    {/* Show a modal for the users to enter group name and invite */}
+                                                    <Modal show={showNewChatModal} onHide={handleNewChatModalClose} style={{color: 'green'}}>
+                                                        <Modal.Header closeButton>
+                                                            <Modal.Title className="modal-title"> Create New Chat </Modal.Title>
+                                                        </Modal.Header>
+
+                                                        <Modal.Body>
+                                                            <Form>
+                                                                <Form.Group className="mb-5" controlId="controlInput1">
+                                                                    <Form.Label className="form-label" style={{color: 'blue', fontWeight: 'bold'}}>Invitee</Form.Label>
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        placeholder="Enter username to send a chat invite"/>
+                                                                </Form.Group>
+                                                            </Form>
+                                                        </Modal.Body>
+
+                                                        <Modal.Footer>
+                                                            <Button variant="primary" onClick={handleNewChatModalCreate}> Send Invite</Button>
+                                                            <Button variant="secondary" onClick={handleNewChatModalClose}> Close </Button>                                                         
+                                                        </Modal.Footer> 
+                                                    </Modal>
+                                                    {/* This will show the success message when invite has been sent */}
+                                                    <Modal show= {showSuccess} onHide={handleCloseSuccess}>
+                                                                <Modal.Header closeButton>
+                                                                    <Modal.Title style={{color: "green"}}> Chat Invite sent successfully! </Modal.Title>
+                                                                </Modal.Header>
+                                                                
+                                                    </Modal>                                                       
                                                 </Navbar>
                                                 <br/>
                                     
