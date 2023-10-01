@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
-import {Container, Form, Button} from 'react-bootstrap'
+import {Container, Form, Button, Card} from 'react-bootstrap'
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faUser, faMessage,faSignOutAlt, faCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faUser, faMessage,faSignOutAlt, faCircle, faTrash, faEnvelope} from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Modal from 'react-bootstrap/Modal'; // for delete pop up
@@ -234,7 +234,7 @@ const Messages = (props) => {
                                         {/* This if for the settings interface */}
                                         <Offcanvas show={show} onHide={handleClose} className="off_canvas">
                                             <Offcanvas.Header closeButton>
-                                                <Offcanvas.Title className="off_canvas_title">Settings</Offcanvas.Title>
+                                                <Offcanvas.Title className="off_canvas_title" style={{fontWeight: "bold"}}>Settings</Offcanvas.Title>
                                             </Offcanvas.Header>
                                             
                                             <Offcanvas.Body className="off_canvas_body">
@@ -300,7 +300,18 @@ const Messages = (props) => {
                                                     </Modal>                                                       
                                                 </Navbar>
                                                 <br/>
-                                    
+
+                                                {/* This is for the invitation page */}
+                                                <Navbar className="bg-body-tertiary">
+                                                    <Container>
+                                                            <Navbar.Brand href="/invitation">
+                                                                <FontAwesomeIcon icon={faEnvelope} className="me-2" />
+                                                                        Invitations
+                                                            </Navbar.Brand>
+                                                    </Container>
+                                                </Navbar>
+                                                <br/>
+
                                                 <Navbar className="bg-body-tertiary">
                                                     <Container>
                                                         <Button className="btn btn-primary" style={{ width: '200px' }} onClick={handleLogout}>
