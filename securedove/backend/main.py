@@ -292,8 +292,8 @@ def left_bar_chat(user_id):
         
 
 # Loads the chat that is requested and returns username, message, timestamp of each message sent in ORDERED by the time they where sent so from top to bottom is the earilest to latest messages
-@app.get("/load_chat")
-def load_chat(chat_id: int):
+@app.get("/load_chat/{chat_id}")
+def load_chat(chat_id):
     cur.execute(f"""SELECT chat_id FROM chats WHERE chat_id = {chat_id}""")
     rows = cur.fetchall()
     if rows != []:

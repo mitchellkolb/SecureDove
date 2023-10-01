@@ -147,7 +147,25 @@ const Messages = (props) => {
     
 
 
-    // const [currMessages, setCurrMessages] = useState([]);
+    const [Messages, setMessages] = useState([]);
+
+    async function handleChatOpened(chat_id) {
+        console.log("Trying to load chat with id=",chat_id);
+        try{
+            const response = await api.get(`/load_chat/${chat_id}`);
+            if (response.data.chat_data !== undefined){
+                setMessages(response.data.chat_data);
+                console.log(response.data.chat_data);
+            }
+            else{
+                console.log("No chat history. Something's wrong.");
+            }
+        }
+        catch(error){
+            console.error("Loading messages failed:", error);
+            alert("Error loading messages. Please try again.");
+        }
+    }
     // useEffect(() => {
     // // Function to fetch data from the FastAPI endpoint
     //     async function fetchCurrMessages() {
@@ -391,8 +409,8 @@ const Messages = (props) => {
 
                                         <MDBTypography listUnStyled className="mb-0" >
                                         {activeChats.map((chat) => (
-                                            <li key={chat.Chat_id} className="p-2 border-bottom">
-                                                <a href={`#chat${chat.Chat_id}`} className="d-flex justify-content-between">
+                                            <li key={chat.Chat_id} className="p-2 border-bottom" onClick={() => handleChatOpened(chat.Chat_id)}>
+                                                <a className="d-flex justify-content-between" >
                                                     <div className="d-flex flex-row">
                                                         <div>
                                                             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" className="d-flex align-self-center me-3"
