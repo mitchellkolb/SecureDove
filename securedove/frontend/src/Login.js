@@ -7,12 +7,12 @@ import './Login.css'
 import { useHistory } from "react-router-dom"; // for redirecting 
 
 // keeps track of who's logged in
-var user_id = 0;
+var user_id = undefined;
 
 const Login = (props) => {
     // reset user_id to 0 when page loads.
     useEffect(() => {
-        user_id = 0;
+        user_id = undefined;
         console.log("userid=",user_id)
     }, []);
 
@@ -25,17 +25,20 @@ const Login = (props) => {
         e.preventDefault();
         try {
             const response = await api.post('/login', {email, password});
-            if (response.data.message !== 0) {
+            if (response.data.User_id !== undefined) {
                 // redirect to messages here
                 console.log("Login successful!");
-                user_id = response.data.message; // temp for now. Later make it so that its loaded from backend reply
+                user_id = response.data.User_id; // temp for now. Later make it so that its loaded from backend reply
                 console.log("userid=",user_id)
                 history.push("/messages");
+            }
+            else{
+                alert("The credentials you entered don't match our records.");
             }
         } 
         catch (error) {
             console.error('Login failed:', error);
-            alert("The credentials you entered don't match our records.");
+            alert("Database error.");
         }
     };
 

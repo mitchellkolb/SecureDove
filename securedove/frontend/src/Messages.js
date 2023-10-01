@@ -23,6 +23,28 @@ import {
   } from "mdb-react-ui-kit";
 
 const Messages = (props) => {
+    // get username based on id when component loads
+    const [username, setUsername] = useState("");
+    useEffect(() => {
+        async function getUsername(){
+            // send request to endpoint to load active conversations
+            try{
+                const response = await api.get(`/get_username/${user_id}`)
+                if (response.data.username !== undefined){
+                    setUsername(response.data.username);
+                    console.log("Welcome, ", username);
+                }
+                else{
+                    console.log("No user is logged in.")
+                }
+            }
+            catch (error) {
+                console.error('Get Username Failed:', error);
+            }
+        }
+
+        getUsername();
+    }, []);
 
     const [dbInfo, setDbInfo] = useState("");
     const [messageId, setMessageId] = useState(0);
@@ -51,7 +73,7 @@ const Messages = (props) => {
         // REACHING BACKEND TO DELETE A USER. CODE IMPLEMENTED ON FE SIDE ALREADY. UNCOMMENT WHEN BE IS FINISHED WITH /DELETE ENDPOINT
         e.preventDefault();
         try {
-            const response = await api.post('/delete_user', {user_id});
+            const response = await api.delete(`/delete_user/${user_id}`);
             if (response.data.message === 'Deletion successful!') {
                 console.log("Delete Successful.")
                 alert('Account deleted!');
@@ -242,7 +264,7 @@ const Messages = (props) => {
                                                     <Container>
                                                         <Navbar.Brand href="#home">
                                                             <FontAwesomeIcon icon={faCircle} style={{ color: 'green' }} /> 
-                                                                Name
+                                                                {username}
                                                                 (Active)
                                                         </Navbar.Brand>
                                                     </Container>

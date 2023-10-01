@@ -110,15 +110,28 @@ async def register(user: UserRegister):
     return {"message": "Register successful!"}
 
 #Deletes user based on user_id passed by the frontend by a logged in user
-@app.delete("/delete_user")
-async def delete_user(user_id: int):
+@app.post("/delete_user/{user_id}")
+async def delete_user(user_id):
+    print("trying to delete user_id=",user_id)
     try:
+        print(f"DELETE FROM Users WHERE user_id = {user_id};")
         cur.execute(f"DELETE FROM users WHERE user_id = {user_id};")
         conn.commit()
         return {"Successfully deleted user with id=": user_id}
     except Exception as e:
         raise HTTPException(status_code=496, detail=str(e))
 
+# gets username to display on FE
+@app.get("/get_username/{user_id}")
+async def get_username(user_id):
+    print("getting username for user_id=", user_id)
+    try:
+        cur.execute(f"SELECT username from Users WHERE user_id={user_id}")
+        rows = cur.fetchall()
+    except Exception as e:
+        raise HTTPException(status_code=496, detail=str(e))
+    if rows != []:
+        return {"username": rows[0][0]}
 
 
 
