@@ -45,15 +45,13 @@ This stores the information about invitations. This table would have the followi
     invitation_id: a unique identifier for each invitation.
     inviter_id: the user who sent the invitation. This is a foreign key referencing user_id in the Users table.
     invitee_id: the user who received the invitation. This is also a foreign key referencing user_id in the Users table.
-    status: the status of the invitation. This could be 'pending', 'accepted', or 'denied'. Once an item is accepted it should be removed shortly after.
 */
 CREATE TABLE Invitations (
     invitation_id SERIAL PRIMARY KEY,
     inviter_id INT NOT NULL,
     invitee_id INT NOT NULL,
-    status VARCHAR(20) NOT NULL,
     FOREIGN KEY (inviter_id) REFERENCES Users(user_id),
-    FOREIGN KEY (invitee_id) REFERENCES Users(user_id),
+    FOREIGN KEY (invitee_id) REFERENCES Users(user_id)
 );
 
 /*
@@ -88,11 +86,11 @@ VALUES
 ('I am good. Thanks!', 3, 2, '2023-09-24 04:58:42 +0000'),
 ('Welcome to SecureDove!', 4, 2, '2023-09-24 04:59:42 +0000');
 
-INSERT INTO Invitations (inviter_id, invitee_id, status)
+INSERT INTO Invitations (inviter_id, invitee_id)
 VALUES 
-(1, 3, 'pending'),
-(2, 4, 'accepted'),
-(3, 5, 'denied');
+(1, 4),
+(2, 4),
+(3, 5);
 
 */
 

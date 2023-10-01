@@ -124,24 +124,30 @@ async def delete_user(user_id: int):
 
 # ---------------------   INVITATION ENDPOINTS -----------------------
 
-# View list of invitations for that user
+# View list of invitations for that user based on the user_id
 @app.get("/view_invite")
 def view_invite(user_id: int):
     print("s")
 
-# Create new invitation to chat from one user to another
+# Create new invitation to chat from one user to another. 
+# newUser is a string that is the user email becuase all emails are unique in the database.
 @app.post("/new_invite")
 def new_invite(user_id: int, newUser: str):
     print("s")
 
 
-# Decide, Reject or Accept for an existing invite
+# Decide, Reject or Accept for an existing invite. the decision parameter is a bool so 0 = REJECT and 1 = ACCEPT
+# After an invite is rejected it is deleted from the table
+# Accepted invites are converted into a new row in the chats table with the two user_id's from the invite and then the accepted invite row is deleted. 
+# Only pending invites should be in the table.
 @app.get("/decide_invite")
-def decide_invite(invite_id: int, decision: str):
+def decide_invite(invite_id: int, decision: bool):
     print("s")
 
 
 
+
+# ---------------------   CHAT / MESSAGES   ENDPOINTS -----------------------
 
 # Gives a snapshot of the chats for the side bar of the logged in user. It gives the other user that is in the chat and the last message sent with its timestamp
 # Returns all chats for that user based off of user_id. Each chat returned will have the chat_id, Other username, last message sent, last message timestamp
@@ -197,10 +203,6 @@ def left_bar_chat(user_id: int):
     else:
         return {"left_bar_chat" : "Failed, User doesn't exist"}
         
-            
-
-
-# ---------------------   CHATS / MESSAGES   ENDPOINTS -----------------------
 
 # Loads the chat that is requested and returns username, message, timestamp of each message sent in ORDERED by the time they where sent so from top to bottom is the earilest to latest messages
 @app.get("/load_chat")
@@ -224,6 +226,7 @@ def load_chat(chat_id: int):
             raise HTTPException(status_code=499, detail=str(e))
     else:
         return {"ERROR": "chat identifier doesn't exist"}
+
 
 # Sends a message to the database, if insertion fails an error will be sent back
 #possible secuirty isuses are sql injection and content checking of the content variable for overflow and malicous code 
