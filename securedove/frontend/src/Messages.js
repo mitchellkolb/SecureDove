@@ -32,7 +32,7 @@ const Messages = (props) => {
                 const response = await api.get(`/get_username/${user_id}`)
                 if (response.data.username !== undefined){
                     setUsername(response.data.username);
-                    console.log("Welcome, ", username);
+                    console.log("Welcome, ", response.data.username);
                 }
                 else{
                     console.log("No user is logged in.")
@@ -44,6 +44,35 @@ const Messages = (props) => {
         }
 
         getUsername();
+    }, []);
+
+    // LOAD ACTIVE CHATS AND MESSAGES FOR CHAT THATS OPENED
+    const [activeChats, setActiveChats] = useState([]);
+    useEffect(() => {
+    // send request to endpoint to load active conversations
+        async function fetchActiveChats() {
+            try {
+                const response = await api.get(`/left_bar_chat/${user_id}`); // needs to be changed to FastAPI endpoint name
+                if (response.data.left_chat_data !== undefined){
+                    setActiveChats(response.data.left_chat_data);
+                    console.log(activeChats);
+                } 
+                else{
+                    console.log("left chat data empty.")
+                }
+            } 
+            catch (error) {
+                console.error('Error loading active chats:', error);
+            }
+        }
+        // call function for the first time when component loads
+        fetchActiveChats();
+        // call fetchActiveChats() every 1000 milliseconds (or every 1 second)
+        //const activeChatsInterval = setInterval(fetchActiveChats, 1000);
+        // turn off interval when app closes.
+        return () => {
+            //clearInterval(activeChatsInterval);
+        };
     }, []);
 
     const [dbInfo, setDbInfo] = useState("");
@@ -110,31 +139,7 @@ const Messages = (props) => {
         setShowSuccess(false);
     }
     
-    
 
-
-    // LOAD ACTIVE CHATS AND MESSAGES FOR CHAT THATS OPENED
-    // const [activeChats, setActiveChats] = useState([]);
-    // useEffect(() => {
-    // // send request to endpoint to load active conversations
-    //     async function fetchActiveChats() {
-    //         try {
-    //             const response = await api.get('/get_active_chats'); // needs to be changed to FastAPI endpoint name
-    //             setActiveChats(response.data);
-    //         } 
-    //         catch (error) {
-    //             console.error('Error loading active chats:', error);
-    //         }
-    //     }
-    //     // call function for the first time when component loads
-    //     fetchActiveChats();
-    //     // call fetchActiveChats() every 1000 milliseconds (or every 1 second)
-    //     const activeChatsInterval = setInterval(fetchActiveChats, 1000);
-    //     // turn off interval when app closes.
-    //     return () => {
-    //         clearInterval(activeChatsInterval);
-    //     };
-    // }, []);
 
     // const [currMessages, setCurrMessages] = useState([]);
     // useEffect(() => {

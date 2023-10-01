@@ -238,8 +238,8 @@ def decide_invite(invite_id: int, decision: bool):
 
 # Gives a snapshot of the chats for the side bar of the logged in user. It gives the other user that is in the chat and the last message sent with its timestamp
 # Returns all chats for that user based off of user_id. Each chat returned will have the chat_id, Other username, last message sent, last message timestamp
-@app.get("/left_bar_chat")
-def left_bar_chat(user_id: int):
+@app.get("/left_bar_chat/{user_id}")
+def left_bar_chat(user_id):
     
     cur.execute(f"SELECT username FROM Users WHERE user_id = {user_id}")
     rows = cur.fetchall()
