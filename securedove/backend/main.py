@@ -5,7 +5,7 @@ import psycopg2
 import os
 
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional, Union
 from secrets import token_hex
@@ -30,6 +30,8 @@ class UserRegister(BaseModel):
     username: str
     email: str
     password: str
+
+    
 
 #First Instance of fastapi and the title for the docs page of FASTAPI
 app = FastAPI(title="SecureDove Backend")
@@ -228,3 +230,114 @@ def join_groupchat():
 # Return to print the reject message
 def reject_invite():
     print("PRINT TO UI: Invitation Rejected")
+
+
+# Gives a snapshot of the chats for the side bar of the logged in user. It gives the other user that is in the chat and the last message sent with its timestamp
+# Returns all chats for that user based off of user_id. Each chat returned will have the chat_id, Other username, last message sent, last message timestamp
+@app.get("/left_bar_chat")
+def left_bar_chat(user_id: int):
+    
+    cur.execute(f"SELECT username FROM Users WHERE user_id = {user_id}")
+    rows = cur.fetchall()
+    if rows != []:
+        username = rows[0][0]
+        print(username)
+        try:
+            cur.execute(f"""
+                SELECT 
+                    c.chat_id, 
+                    u1.username AS user1_username, 
+                    u2.username AS user2_username, 
+                    COALESCE(m.message_text, NULL) AS last_message, 
+                    COALESCE(m.time_sent, NULL) AS last_message_timestamp
+                FROM 
+                    Chats c
+                INNER JOIN 
+                    Users u1 ON c.user1_id = u1.user_id
+                INNER JOIN 
+                    Users u2 ON c.user2_id = u2.user_id
+                LEFT JOIN (
+                    SELECT 
+                        m1.sent_in, 
+                        m1.message_text, 
+                        m1.time_sent
+                    FROM 
+                        Messages m1
+                    WHERE 
+                        m1.time_sent = (
+                            SELECT 
+                                MAX(m2.time_sent) 
+                            FROM 
+                                Messages m2 
+                            WHERE 
+                                m2.sent_in = m1.sent_in
+                        )
+                ) m ON c.chat_id = m.sent_in
+                WHERE 
+                    c.user1_id = {user_id} OR c.user2_id = {user_id};
+            """)
+            rows = cur.fetchall()
+            print(rows)
+            fixedrows = [tuple(ele for ele in sub if ele != username) for sub in rows]
+            print("okay")
+            print(fixedrows)
+            columns = ["Chat_id", "Other User", "Last Message", "Timestamp"]
+            data = [dict(zip(columns, row)) for row in fixedrows]
+            return {"left_chat_data": data}
+        except Exception as e:
+            raise HTTPException(status_code=498, detail=str(e))
+    else:
+        return {"left_bar_chat" : "Failed, User doesn't exist"}
+        
+            
+
+
+# Loads the chat that is requested and returns username, message, timestamp of each message sent in ORDERED by the time they where sent so from top to bottom is the earilest to latest messages
+@app.get("/load_chat")
+def load_chat(chat_id: int):
+    cur.execute(f"""SELECT chat_id FROM chats WHERE chat_id = {chat_id}""")
+    rows = cur.fetchall()
+    print(rows)
+    if rows != []:
+        try:
+            cur.execute(f"""
+                SELECT Users.username, Messages.message_text, Messages.time_sent
+                FROM Messages
+                INNER JOIN Users ON Messages.sent_by = Users.user_id
+                WHERE Messages.sent_in = {chat_id}
+                ORDER BY Messages.time_sent;
+            """)
+            rows = cur.fetchall()
+            columns = ["Sender Username", "Message", "Timestamp"]
+            data = [dict(zip(columns, row)) for row in rows]
+            return {"chat_data": data}
+        except Exception as e:
+            raise HTTPException(status_code=499, detail=str(e))
+    else:
+        return {"ERROR": "chat identifier doesn't exist"}
+
+# Sends a message to the database, if insertion fails an error will be sent back
+#possible secuirty isuses are sql injection and content checking of the content variable for overflow and malicous code 
+@app.post("/send_message")
+def send_message(user_id: int, chat_id: int, content: str):
+    try:
+        cur.execute(f"""
+             INSERT INTO messages (message_text, sent_by, sent_in)
+             VALUES ('{content}', {user_id}, {chat_id});
+        """)
+        conn.commit()
+        return {"message": "Message sent successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=498, detail=str(e))
+    
+
+#For debug uses but this deletes a message when given message_id
+@app.delete("/delete_message")
+def delete_message(message_id: int):
+    try:
+        cur.execute(f"DELETE FROM messages WHERE message_id = {message_id};")
+        conn.commit()
+        return {"message": "Message deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=497, detail=str(e))
+
