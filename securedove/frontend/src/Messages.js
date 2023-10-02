@@ -157,7 +157,6 @@ const Messages = (props) => {
         console.log("Trying to load chat with id=",chat_id);
         const messages = [];
         var senderbool;
-        alert("WARNING");
         try{
             const response = await api.get(`/load_chat/${chat_id}`); 
             if (response.data.chat_data !== undefined){
