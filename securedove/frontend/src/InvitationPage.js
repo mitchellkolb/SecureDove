@@ -35,8 +35,8 @@ const InvitationPage = ({onClose}) => {
 
     }, []);
     
-    async function handleAccept(invite_id){
-        const decision = true;
+    const handleAccept = async(invite_id) =>{
+        const decision = "true";
         try{
             const response = await api.post(`/decide_invite/${invite_id}/${decision}`)
             if (response.data.message === "Invite accepted successfully"){
@@ -49,8 +49,8 @@ const InvitationPage = ({onClose}) => {
         }
     }
 
-    async function handleDecline(invite_id){
-        const decision = false;
+    const handleDecline = async (invite_id) =>{
+        const decision = "false";
         try{
             const response = await api.post(`/decide_invite/${invite_id}/${decision}`)
             if (response.data.message === "Invite declined successfully"){
@@ -62,19 +62,20 @@ const InvitationPage = ({onClose}) => {
             alert("Couldn't decline. Try again.")
         }
     }
+
     return (
         <div>
             <Container className="mt-0">
                 {invitations.map((invitation) => (
-                    <Card key={invitation.id} className="mb-0">
+                    <Card className="mb-0">
                         <Card.Body>
                             <Card.Text>
                                 You have received an invitation from {invitation.sender}. Do you want to accept or decline?
                             </Card.Text>
-                            <Button variant="success" style={{ width: '150px' }} onClick>Accept</Button>
-                            <Button variant="danger"style={{ width: '150px' }} onClick>Decline</Button>
+                            <Button variant="success" style={{ width: '150px' }} onClick={() => handleAccept(invitation.id)}>Accept</Button>
+                            <Button variant="danger"style={{ width: '150px' }} onClick={() => handleDecline(invitation.id)}>Decline</Button>
                         </Card.Body>
-                    </Card>
+                    </Card> 
                 ))}
             </Container>
             <Button onClick={onClose}className="mt-3">Close</Button>

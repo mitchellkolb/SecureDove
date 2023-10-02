@@ -217,7 +217,10 @@ def new_invite(inviter_user_id, newUser):
 @app.post("/decide_invite/{invite_id}/{decision}")
 def decide_invite(invite_id, decision):
     # True means the invite was accepted
-    if decision == True:
+    print("invite_id", invite_id)
+    print("decision", decision)
+    if decision == "true":
+        print("true")
         try:
             cur.execute(f"SELECT * FROM Invitations where invitation_id = {invite_id}") 
         except:
@@ -245,6 +248,7 @@ def decide_invite(invite_id, decision):
             return {"error":"Failure inserting into the Chats table"}
     # Invite was declined
     else:
+        print("false")
         try:
             cur.execute(f"DELETE FROM Invitations WHERE invitation_id = {invite_id}")
             conn.commit()
@@ -252,6 +256,8 @@ def decide_invite(invite_id, decision):
             print("Could not delete the invitation from the database")
             return {"error":"Could not delete the invitation from the database"}
         return {"message": "Invite declined successfully"}
+
+
 
 
 
