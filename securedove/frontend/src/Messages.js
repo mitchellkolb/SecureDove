@@ -467,7 +467,7 @@ const Messages = (props) => {
                                         ))}
                                     </div>
                                     
-                                    <div className="text-muted d-flex justify-content-start align-items-center pe-3 st-3" style={{ position: 'absolute', bottom: 0, width: '100%'}}>
+                                    <div className="text-muted d-flex justify-content-start align-items-center pe-3 st-3" style={{ position: 'absolute', bottom: '5%', width: '65%'}}>
                                         <img
                                         src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
                                             style={{ width: "40px", height: "100%" }}/>
