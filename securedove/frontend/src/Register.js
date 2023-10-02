@@ -51,22 +51,22 @@ const Register = (props) =>{
             </div> 
             <Form className="register_form" onSubmit={handleRegister}>
                 <Form.Group className="mb-3" controlId="formBasicUsername">
-                    <Form.Label>Username</Form.Label>
+                    <Form.Label  style={{color: "white"}}>Username</Form.Label>
                     <Form.Control type="text" name="username" placeholder="Enter Username" onChange={(e)=>setUsername(e.target.value)}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
+                    <Form.Label  style={{color: "white"}}>Email address</Form.Label>
                     <Form.Control type="text" name="email" placeholder="Enter Email" onChange={(e)=>setEmail(e.target.value)}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label  style={{color: "white"}}>Password</Form.Label>
                     <Form.Control type="password" name="password" placeholder="Enter Password" onChange={(e)=>setPassword(e.target.value)}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Label  style={{color: "white"}}>Confirm Password</Form.Label>
                     <Form.Control type="password" name="confirmPassword" placeholder="Confirm Password" onChange={(e)=>setConfirmPassword(e.target.value)}/>
                 </Form.Group>
 

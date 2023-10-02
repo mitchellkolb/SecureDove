@@ -48,13 +48,6 @@
     background-color: #0056b3;
   }
 
-  .btn_settings{
-    position: absolute;
-    bottom: 100px;
-    right: 40%;
-    
-  }
-
   .btn_chats{
     position: absolute;
     bottom: 100px;
@@ -85,8 +78,8 @@
 
 .settings-container {
   position: relative;
-  top: 15%;
-  right: 55%;
+  bottom: 20px;
+  right: 10px;
 }
 
 .py-5 {

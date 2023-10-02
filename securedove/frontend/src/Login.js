@@ -53,12 +53,12 @@ const Login = (props) => {
             <Form className="login_form" onSubmit={handleLogin}>
 
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
+                    <Form.Label style={{color: "white"}}>Email address</Form.Label>
                     <Form.Control type="text" name="email" placeholder="Enter Email" onChange={(e)=>setEmail(e.target.value)}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label  style={{color: "white"}}>Password</Form.Label>
                     <Form.Control type="password" name="password" placeholder="Enter Password" onChange={(e)=>setPassword(e.target.value)}/>
                 </Form.Group>
 
@@ -68,8 +68,7 @@ const Login = (props) => {
             </Form>
 
             <div className="d-flex justify-content-center mt-3">
-                <Link to="/register" className="btn btn-primary mr-2">Register</Link>
-                <Link to="/messages" className="btn btn-primary">Messages</Link>
+                <Link to="/register" className="btn btn-secondary mr-2">Register</Link>
             </div>
         </Container>
     );
