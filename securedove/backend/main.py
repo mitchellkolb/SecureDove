@@ -109,17 +109,38 @@ async def register(user: UserRegister):
     print("Register success.")
     return {"message": "Register successful!"}
 
-#Deletes user based on user_id passed by the frontend by a logged in user
-@app.post("/delete_user/{user_id}")
+#Deletes user based on user_id p=assed by the frontend by a logged in user
+# @app.delete("/delete_user2/{user_id}")
+# async def delete_user2(user_id):
+#     print("trying to delete user_id=",user_id)
+#     try:
+#         print(f"DELETE FROM Users WHERE user_id = {user_id};")
+#         cur.execute(f"DELETE FROM users WHERE user_id = {user_id};")
+#         conn.commit()
+#         return {"Successfully deleted user with id=": user_id}
+#     except Exception as e:
+#         raise HTTPException(status_code=496, detail=str(e))
+    
+@app.delete("/delete_user/{user_id}")
 async def delete_user(user_id):
     print("trying to delete user_id=",user_id)
     try:
-        print(f"DELETE FROM Users WHERE user_id = {user_id};")
-        cur.execute(f"DELETE FROM users WHERE user_id = {user_id};")
-        conn.commit()
-        return {"Successfully deleted user with id=": user_id}
+        cur.execute(f"SELECT chat_id From Chats WHERE user1_id = {user_id} OR user2_id={user_id};")
+        rows = cur.fetchall()
+        print("rows",rows)
+        if rows != []:
+            cur.execute(f"DELETE FROM Messages WHERE sent_in = {rows[0][0]};")
+            cur.execute(f"DELETE FROM Chats WHERE user1_id = {user_id} OR user2_id = {user_id};")
+            conn.commit()
     except Exception as e:
-        raise HTTPException(status_code=496, detail=str(e))
+        raise HTTPException(status_code=403, detail=str(e))
+    try:
+        cur.execute(f"DELETE FROM Invitations WHERE inviter_id = {user_id} OR invitee_id = {user_id};")
+        cur.execute(f"DELETE FROM Users WHERE user_id = {user_id};")
+        conn.commit()
+        return {"message":"Deletion successful!"}
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 # gets username to display on FE
 @app.get("/get_username/{user_id}")
@@ -138,8 +159,8 @@ async def get_username(user_id):
 # ---------------------   INVITATION ENDPOINTS -----------------------
 
 # View list of invitations for that user based on the user_id. Should only be pending invites in the database
-@app.get("/view_invite")
-def view_invite(user_id: int):
+@app.get("/view_invite/{user_id}")
+def view_invite(user_id):
     
     try:
         cur.execute(f"SELECT * FROM Invitations where invitee_id = '{user_id}'") 
@@ -165,8 +186,8 @@ def view_invite(user_id: int):
 
 # Create new invitation to chat from one user to another. 
 # newUser is a string that is the user email becuase all emails are unique in the database.
-@app.post("/new_invite")
-def new_invite(inviter_user_id: int, newUser: str):
+@app.post("/new_invite/{inviter_user_id}/{newUser}")
+def new_invite(inviter_user_id, newUser):
     
     print(inviter_user_id, newUser)
     try:

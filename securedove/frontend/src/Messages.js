@@ -121,7 +121,7 @@ const Messages = (props) => {
         } 
         catch (error) {
             console.error('Delete failed:', error);
-            alert("Error deleting account. Please try again.")
+            alert("Error deleting account. Please try again.");
         }
     };
 
@@ -152,34 +152,39 @@ const Messages = (props) => {
     async function handleChatOpened(chat_id) {
         console.log("Trying to load chat with id=",chat_id);
         const messages = [];
-        var id;
-        var sender;
-        var text;
-        var timestamp;
-        var isSender;
+        var senderbool;
         try{
-            const response = await api.get(`/load_chat/${chat_id}`);
+            const response = await api.get(`/load_chat/${chat_id}`); 
             if (response.data.chat_data !== undefined){
                 setMessages(response.data.chat_data);
                 console.log(response.data.chat_data);
                 for (let i = 0; i < response.data.chat_data.length; i++){
                     // "Sender Username", Message, Timestamp
-                    console.log(response.data.chat_data[i]["Sender Username"]);
-                    console.log(response.data.chat_data[i].Message);
-                    console.log(response.data.chat_data[i].Timestamp);
+                    // console.log(response.data.chat_data[i]["Sender Username"]);
+                    // console.log(response.data.chat_data[i].Message);
+                    // console.log(response.data.chat_data[i].Timestamp);
                     //id: 3,
                     //sender: 'Sender Name',
                     //text: 'Not much!',
                     //timestamp: '12:22 PM | Sep 25',
                     //isSender: true,
                     if (response.data.chat_data[i]["Sender Username"] === username){
-                        isSender = true;
+                        senderbool = true;
                     }
                     else{
-                        isSender = false;
+                        senderbool = false;
                     }
-
+                    const newMessage = {
+                        id: i+1,
+                        sender: response.data.chat_data[i]["Sender Username"],
+                        text: response.data.chat_data[i].Message,
+                        timestamp: response.data.chat_data[i].Timestamp,
+                        isSender: senderbool,
+                    }
+                    //console.log(newMessage);
+                    messages.push(newMessage);
                 }
+                setMessages(messages);
             }
             else{
                 console.log("No chat history. Something's wrong.");
@@ -224,66 +229,13 @@ const Messages = (props) => {
         setMessageId(event.target.value);
     }
 
-    {/* Can be modified to fetch get messages from the backend database */}
-    const messages = [
-        {
-          id: 1,
-          sender: 'Sender Name',
-          text: 'Hello!',
-          timestamp: '12:12 PM | Sep 25',
-          isSender: true, // We check to see if the message is sent by the current user
-        },
-        {
-          id: 2,
-          sender: 'Receiver Name',
-          text: 'Hi, wassup?',
-          timestamp: '12:16 PM | Sep 25',
-          isSender: false,
-        },
-        {
-          id: 3,
-          sender: 'Sender Name',
-          text: 'Not much!',
-          timestamp: '12:22 PM | Sep 25',
-          isSender: true,
-        },
-        {
-            id: 4,
-            sender: 'Sender Name',
-            text: 'You wanna grab lunch with me?',
-            timestamp: '12:23 PM | Sep 25',
-            isSender: true,
-        },
-        {
-            id: 5,
-            sender: 'Sender Name',
-            text: '??',
-            timestamp: '12:23 PM | Sep 25',
-            isSender: true,
-        },
-        {
-            id: 6,
-            sender: 'Receiver Name',
-            text: "Sure! I'm am down",
-            timestamp: '12:29 PM | Sep 25',
-            isSender: false,
-        },
-        {
-            id: 7,
-            sender: 'Receiver Name',
-            text: "what time and where?",
-            timestamp: '12:29 PM | Sep 25',
-            isSender: false,
-        },
-        
-      ];
+    
 
     return (
         <>
         {/* <Container className="mt-5">
                 <div className="row">
                     <div className="col-md-12">
-                        <img src={app_logo} alt="App-Logo" className="img-fluid centered-horizontally-image" />
                     </div>
                 </div> 
                 <Form.Group className="mb-3" controlId="formBasicMessageId">
@@ -294,6 +246,134 @@ const Messages = (props) => {
                 <Button onClick={fetchDBInfo}>Get DB Info</Button>
                 <p>{dbInfo}</p>
             </Container> */}
+        <Container className="mt-5">
+            <div className="row">
+                    <div className="col-md-12">
+                </div>
+            </div> 
+            <div className="settings-container">
+                <button variant="primary" onClick={handleShow} className="btn_settings">
+                    <FontAwesomeIcon icon={faCog} /> 
+                </button>
+                {/* This if for the settings interface */}
+                <Offcanvas show={show} onHide={handleClose} className="off_canvas">
+                    <Offcanvas.Header closeButton>
+                        <Offcanvas.Title className="off_canvas_title" style={{fontWeight: "bold"}}>Settings</Offcanvas.Title>
+                    </Offcanvas.Header>
+                    
+                    <Offcanvas.Body className="off_canvas_body">
+                        <Navbar className="bg-body-tertiary">
+                            <Container>
+                                <Navbar.Brand href="#home">
+                                    <FontAwesomeIcon icon={faCircle} style={{ color: 'green' }} /> 
+                                        {username}
+                                        (Active)
+                                </Navbar.Brand>
+                            </Container>
+                        </Navbar>
+                        <br/>
+            
+                        <Navbar className="bg-body-tertiary">
+                            <Container>
+                                <Navbar.Brand href="#home">
+                                    <FontAwesomeIcon icon={faUser} className="me-2" />
+                                        Profile
+                                </Navbar.Brand>
+                            </Container>
+                                
+                        </Navbar>
+                        <br/>
+
+                        <Navbar className="bg-body-tertiary">
+                            <Container>
+                                <Navbar.Brand href="#home" onClick={handleNewChatModalShow}>
+                                    <FontAwesomeIcon icon={faMessage} className="me-2" />
+                                            Create New Chat
+                                </Navbar.Brand>
+                            </Container>
+
+
+                            {/* Show a modal for the users to enter group name and invite */}
+                            <Modal show={showNewChatModal} onHide={handleNewChatModalClose} style={{color: 'green'}}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title className="modal-title"> Create New Chat </Modal.Title>
+                                </Modal.Header>
+
+                                <Modal.Body>
+                                    <Form>
+                                        <Form.Group className="mb-5" controlId="controlInput1">
+                                            <Form.Label className="form-label" style={{color: 'blue', fontWeight: 'bold'}}>Invitee</Form.Label>
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="Enter username to send a chat invite"/>
+                                        </Form.Group>
+                                    </Form>
+                                </Modal.Body>
+
+                                <Modal.Footer>
+                                    <Button variant="primary" onClick={handleNewChatModalCreate}> Send Invite</Button>
+                                    <Button variant="secondary" onClick={handleNewChatModalClose}> Close </Button>                                                         
+                                </Modal.Footer> 
+                            </Modal>
+                            {/* This will show the success message when invite has been sent */}
+                            <Modal show= {showSuccess} onHide={handleCloseSuccess}>
+                                        <Modal.Header closeButton>
+                                            <Modal.Title style={{color: "green"}}> Chat Invite sent successfully! </Modal.Title>
+                                        </Modal.Header>
+                                        
+                            </Modal>                                                       
+                        </Navbar>
+                        <br/>
+
+                        {/* This is for the invitation page */}
+                        <Navbar className="bg-body-tertiary">
+                            <Container>
+                                    <Navbar.Brand href="/invitation">
+                                        <FontAwesomeIcon icon={faEnvelope} className="me-2" />
+                                                Invitations
+                                    </Navbar.Brand>
+                            </Container>
+                        </Navbar>
+                        <br/>
+
+                        <Navbar className="bg-body-tertiary">
+                            <Container>
+                                <Button className="btn btn-primary" style={{ width: '200px' }} onClick={handleLogout}>
+                                    <FontAwesomeIcon icon={faSignOutAlt} className="me-2"/>
+                                        Logout
+                                </Button>
+                                        
+                            </Container>
+                        </Navbar>
+                        <br/>
+
+                        <Navbar className="bg-body-tertiary">
+                            <Container>
+                                <Button variant="danger" style={{ width: '200px' }} onClick={handleModalShow}>
+                                    <FontAwesomeIcon icon={faTrash} className="me-2" />
+                                        Delete Account
+                                </Button>         
+                            </Container>
+
+                            <Modal show={showModal} onHide={handleModalClose}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Warning</Modal.Title>
+                                </Modal.Header>
+
+                                <Modal.Body>
+                                    <p>Are you sure you would like to delete your account? This process cannot be reversed.</p>
+                                </Modal.Body>
+
+                                <Modal.Footer>
+                                    <Button variant="danger"  onClick={handleDeleteAccount} >Yes, delete my account permanently. </Button>
+                                    <Button variant="secondary" onClick={handleModalClose}>No, keep my account.</Button>
+                                </Modal.Footer>
+                            </Modal>                                        
+                        </Navbar>
+                    </Offcanvas.Body>
+                </Offcanvas>
+            </div>
+        </Container>
         <MDBContainer fluid className="py-5" style={{ backgroundColor: "#2a303" }}>
             <MDBRow>
                 <MDBCol md="12">
@@ -302,129 +382,6 @@ const Messages = (props) => {
                             <div className="chat-container">
                                 {/* 1st column: Chat panel (left side) */}
                                 <MDBCol md="6" lg="5" xl="4" className="mb-4 mb-md-0">
-                                    <div className="settings-container">
-                                        <button variant="primary" onClick={handleShow} className="btn_settings">
-                                            <FontAwesomeIcon icon={faCog} /> 
-                                        </button>
-                                        {/* This if for the settings interface */}
-                                        <Offcanvas show={show} onHide={handleClose} className="off_canvas">
-                                            <Offcanvas.Header closeButton>
-                                                <Offcanvas.Title className="off_canvas_title" style={{fontWeight: "bold"}}>Settings</Offcanvas.Title>
-                                            </Offcanvas.Header>
-                                            
-                                            <Offcanvas.Body className="off_canvas_body">
-                                                <Navbar className="bg-body-tertiary">
-                                                    <Container>
-                                                        <Navbar.Brand href="#home">
-                                                            <FontAwesomeIcon icon={faCircle} style={{ color: 'green' }} /> 
-                                                                {username}
-                                                                (Active)
-                                                        </Navbar.Brand>
-                                                    </Container>
-                                                </Navbar>
-                                                <br/>
-                                    
-                                                <Navbar className="bg-body-tertiary">
-                                                    <Container>
-                                                        <Navbar.Brand href="#home">
-                                                            <FontAwesomeIcon icon={faUser} className="me-2" />
-                                                                Profile
-                                                        </Navbar.Brand>
-                                                    </Container>
-                                                        
-                                                </Navbar>
-                                                <br/>
-
-                                                <Navbar className="bg-body-tertiary">
-                                                    <Container>
-                                                        <Navbar.Brand href="#home" onClick={handleNewChatModalShow}>
-                                                            <FontAwesomeIcon icon={faMessage} className="me-2" />
-                                                                    Create New Chat
-                                                        </Navbar.Brand>
-                                                    </Container>
-
-
-                                                    {/* Show a modal for the users to enter group name and invite */}
-                                                    <Modal show={showNewChatModal} onHide={handleNewChatModalClose} style={{color: 'green'}}>
-                                                        <Modal.Header closeButton>
-                                                            <Modal.Title className="modal-title"> Create New Chat </Modal.Title>
-                                                        </Modal.Header>
-
-                                                        <Modal.Body>
-                                                            <Form>
-                                                                <Form.Group className="mb-5" controlId="controlInput1">
-                                                                    <Form.Label className="form-label" style={{color: 'blue', fontWeight: 'bold'}}>Invitee</Form.Label>
-                                                                    <Form.Control
-                                                                        type="text"
-                                                                        placeholder="Enter username to send a chat invite"/>
-                                                                </Form.Group>
-                                                            </Form>
-                                                        </Modal.Body>
-
-                                                        <Modal.Footer>
-                                                            <Button variant="primary" onClick={handleNewChatModalCreate}> Send Invite</Button>
-                                                            <Button variant="secondary" onClick={handleNewChatModalClose}> Close </Button>                                                         
-                                                        </Modal.Footer> 
-                                                    </Modal>
-                                                    {/* This will show the success message when invite has been sent */}
-                                                    <Modal show= {showSuccess} onHide={handleCloseSuccess}>
-                                                                <Modal.Header closeButton>
-                                                                    <Modal.Title style={{color: "green"}}> Chat Invite sent successfully! </Modal.Title>
-                                                                </Modal.Header>
-                                                                
-                                                    </Modal>                                                       
-                                                </Navbar>
-                                                <br/>
-
-                                                {/* This is for the invitation page */}
-                                                <Navbar className="bg-body-tertiary">
-                                                    <Container>
-                                                            <Navbar.Brand href="/invitation">
-                                                                <FontAwesomeIcon icon={faEnvelope} className="me-2" />
-                                                                        Invitations
-                                                            </Navbar.Brand>
-                                                    </Container>
-                                                </Navbar>
-                                                <br/>
-
-                                                <Navbar className="bg-body-tertiary">
-                                                    <Container>
-                                                        <Button className="btn btn-primary" style={{ width: '200px' }} onClick={handleLogout}>
-                                                            <FontAwesomeIcon icon={faSignOutAlt} className="me-2"/>
-                                                                Logout
-                                                        </Button>
-                                                                
-                                                    </Container>
-                                                </Navbar>
-                                                <br/>
-
-                                                <Navbar className="bg-body-tertiary">
-                                                    <Container>
-                                                        <Button variant="danger" style={{ width: '200px' }} onClick={handleModalShow}>
-                                                            <FontAwesomeIcon icon={faTrash} className="me-2" />
-                                                                Delete Account
-                                                        </Button>         
-                                                    </Container>
-
-                                                    <Modal show={showModal} onHide={handleModalClose}>
-                                                        <Modal.Header closeButton>
-                                                            <Modal.Title>Warning</Modal.Title>
-                                                        </Modal.Header>
-
-                                                        <Modal.Body>
-                                                            <p>Are you sure you would like to delete your account? This process cannot be reversed.</p>
-                                                        </Modal.Body>
-
-                                                        <Modal.Footer>
-                                                            <Button variant="danger"  onClick={handleDeleteAccount} >Yes, delete my account permanently. </Button>
-                                                            <Button variant="secondary" onClick={handleModalClose}>No, keep my account.</Button>
-                                                        </Modal.Footer>
-                                                    </Modal>                                        
-                                                </Navbar>
-                                            </Offcanvas.Body>
-                                        </Offcanvas>
-                                    </div>
-
                                     {/* Chat panel */}
                                     <div className="p-5">
                                         <MDBInputGroup className="rounded mb-3">
@@ -462,7 +419,7 @@ const Messages = (props) => {
 
                                     {/* Use overflow to make messages scrollable */}
                                     <div className="chat-messages ps-2 pt-2 pe-2" style={{ maxHeight: '900px', overflowY: 'auto' }}>
-                                        {messages.map((message) => (
+                                        {Messages.map((message) => (
                                             // It the messages is sent by current user, we justify-content-start
                                             // But if the messages is received by current user, we justify-content-end
                                             <div key={message.id} className={`d-flex flex-row justify-content-${message.isSender ? 'start' : 'end'}`}>
@@ -513,7 +470,7 @@ const Messages = (props) => {
                                         <a className="ms-3 text-muted" href="#emoji">
                                             <MDBIcon fas icon="smile" />
                                         </a>
-                                        <a className="ms-3" href="#!">
+                                        <a className="ms-3" href="#!" onClick>
                                             <MDBIcon fas icon="paper-plane" />
                                         </a>
                                     </div>
