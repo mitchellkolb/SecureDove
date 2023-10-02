@@ -169,7 +169,7 @@ def view_invite(user_id):
         return {"error":"Could not retrieve any invitations from database"}
     
     rows = cur.fetchall()
-
+    result = []
     for tup in rows:
         inviter_id = tup[1]
         try:
@@ -179,10 +179,11 @@ def view_invite(user_id):
             return {"error":"Could not retrieve any invitations from database"}
         rows2 = cur.fetchall()
         username = rows2[0][0]
+        result.append(tuple([tup[0], username]))
         print("You have an invite from: ", username)
     
     print("You have successfully displayed all of the invites")
-    return {"message":"You have successfully displayed all of the invites"}
+    return {"inviters":result}
 
 # Create new invitation to chat from one user to another. 
 # newUser is a string that is the user email becuase all emails are unique in the database.
@@ -213,8 +214,8 @@ def new_invite(inviter_user_id, newUser):
 # After an invite is rejected it is deleted from the table
 # Accepted invites are converted into a new row in the chats table with the two user_id's from the invite and then the accepted invite row is deleted. 
 # Only pending invites should be in the table.
-@app.get("/decide_invite")
-def decide_invite(invite_id: int, decision: bool):
+@app.post("/decide_invite/{invite_id}/{decision}")
+def decide_invite(invite_id, decision):
     # True means the invite was accepted
     if decision == True:
         try:

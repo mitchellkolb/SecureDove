@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom"; // for redirecting
 import './Messages.css';
 import api from './api'; // fetch origin of fastapi backend
 import { user_id } from "./Login";
-
+import { useLocation } from 'react-router-dom';
 import {
     MDBContainer,
     MDBRow,
@@ -21,8 +21,21 @@ import {
     MDBTypography,
     MDBInputGroup,
   } from "mdb-react-ui-kit";
-
+import InvitationPage
+ from "./InvitationPage";
 const Messages = (props) => {
+    const [isInvOpen, setIsInvOpen] = useState(false);
+
+    const openInv = () => {
+        setIsInvOpen(true);
+    };
+
+    const closeInv = () => {
+        setIsInvOpen(false);
+    };
+
+    // track when route changes so that component reloads everything
+    const location = useLocation();
     // get username based on id when component loads
     const [username, setUsername] = useState("");
     useEffect(() => {
@@ -44,42 +57,32 @@ const Messages = (props) => {
         }
 
         getUsername();
-    }, []);
 
-    // LOAD ACTIVE CHATS AND MESSAGES FOR CHAT THATS OPENED
+    }, [location.pathname]);
+
     const [activeChats, setActiveChats] = useState([]);
+    async function fetchActiveChats() {
+        try {
+            const response = await api.get(`/left_bar_chat/${user_id}`); // needs to be changed to FastAPI endpoint name
+            if (response.data.left_chat_data !== undefined){
+                setActiveChats(response.data.left_chat_data);
+                // console.log(activeChats);
+            } 
+            else{
+                console.log("left chat data empty.")
+            }
+        } 
+        catch (error) {
+            console.error('Error loading active chats:', error);
+        }
+    }
+    // LOAD ACTIVE CHATS AND MESSAGES FOR CHAT THATS OPENED
     useEffect(() => {
     // send request to endpoint to load active conversations
-        async function fetchActiveChats() {
-            try {
-                const response = await api.get(`/left_bar_chat/${user_id}`); // needs to be changed to FastAPI endpoint name
-                if (response.data.left_chat_data !== undefined){
-                    setActiveChats(response.data.left_chat_data);
-                    console.log(activeChats);
-                    for (let i =0; i < response.data.left_chat_data.length; i++){
-                        // Chat_id, "Other User",  "Last Message", "Timestamp"
-                        console.log(response.data.left_chat_data[i]["Other User"]);
-                        console.log(response.data.left_chat_data[i]["Last Message"]);
-                        console.log(response.data.left_chat_data[i]["Timestamp"]);
-                    }
-                } 
-                else{
-                    console.log("left chat data empty.")
-                }
-            } 
-            catch (error) {
-                console.error('Error loading active chats:', error);
-            }
-        }
         // call function for the first time when component loads
-        fetchActiveChats();
-        // call fetchActiveChats() every 1000 milliseconds (or every 1 second)
-        //const activeChatsInterval = setInterval(fetchActiveChats, 1000);
-        // turn off interval when app closes.
-        return () => {
-            //clearInterval(activeChatsInterval);
-        };
-    }, []);
+        fetchActiveChats(); 
+      
+    }, [location.pathname]);
 
     const [dbInfo, setDbInfo] = useState("");
     const [messageId, setMessageId] = useState(0);
@@ -196,6 +199,7 @@ const Messages = (props) => {
             alert("Error loading messages. Please try again.");
         }
     }
+
     // useEffect(() => {
     // // Function to fetch data from the FastAPI endpoint
     //     async function fetchCurrMessages() {
@@ -238,6 +242,8 @@ const Messages = (props) => {
                 console.log("Message sent successfully.");
                 // call  function to reload chat with new message
                 handleChatOpened(currChat);
+                fetchActiveChats();
+                setTextBar("");
             }
             else{
                 alert("Error sending message. Please try again.");
@@ -357,10 +363,13 @@ const Messages = (props) => {
                                                         {/* This is for the invitation page */}
                                                         <Navbar className="bg-body-tertiary">
                                                             <Container>
-                                                                    <Navbar.Brand href="/invitation">
+                                                                    <Navbar.Brand onClick={openInv}>
                                                                         <FontAwesomeIcon icon={faEnvelope} className="me-2" />
                                                                                 Invitations
                                                                     </Navbar.Brand>
+                                                                    {isInvOpen && (
+                                                                        <InvitationPage onClose={closeInv} />
+                                                                    )}
                                                             </Container>
                                                         </Navbar>
                                                         <br/>
