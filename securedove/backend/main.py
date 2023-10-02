@@ -338,8 +338,8 @@ def load_chat(chat_id):
 
 # Sends a message to the database, if insertion fails an error will be sent back
 #possible secuirty isuses are sql injection and content checking of the content variable for overflow and malicous code 
-@app.post("/send_message")
-def send_message(user_id: int, chat_id: int, content: str):
+@app.post("/send_message/{user_id}/{chat_id}/{content}")
+def send_message(user_id, chat_id, content):
     try:
         cur.execute(f"""
              INSERT INTO messages (message_text, sent_by, sent_in)

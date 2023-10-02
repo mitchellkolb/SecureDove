@@ -146,10 +146,11 @@ const Messages = (props) => {
     }
     
 
-
+    const [currChat, setCurrChat] = useState();
     const [Messages, setMessages] = useState([]);
-
     async function handleChatOpened(chat_id) {
+        // set chatid so that app knows who to send messages to when plane is clicked.
+        setCurrChat(chat_id);
         console.log("Trying to load chat with id=",chat_id);
         const messages = [];
         var senderbool;
@@ -229,7 +230,25 @@ const Messages = (props) => {
         setMessageId(event.target.value);
     }
 
-    
+    const [textBar,setTextBar] = useState("");
+    async function handleSendMessage(){
+        try{
+            const response = await api.post(`/send_message/${user_id}/${currChat}/${textBar}`)
+            if (response.data.message === "Message sent successfully"){
+                console.log("Message sent successfully.");
+                // call  function to reload chat with new message
+                handleChatOpened(currChat);
+            }
+            else{
+                alert("Error sending message. Please try again.");
+            }
+        }
+        catch(error){
+            console.error("Sending messages failed:", error);
+            alert("Error sending messages. Please try again.");
+        }
+
+    }
 
     return (
         <>
@@ -460,7 +479,9 @@ const Messages = (props) => {
                                             type="text"
                                             className="form-control form-control-lg"
                                             id="exampleFormControlInput2"
-                                            placeholder="Type message"/>
+                                            placeholder="Type message"
+                                            value={textBar}
+                                            onChange={(e)=>setTextBar(e.target.value)}/>
 
                                         <div className="attachment ms-3" style={{cursor: 'pointer'}}>
                                             <label for="fileInput"> <MDBIcon fas icon="paperclip"/> </label>
@@ -470,7 +491,7 @@ const Messages = (props) => {
                                         <a className="ms-3 text-muted" href="#emoji">
                                             <MDBIcon fas icon="smile" />
                                         </a>
-                                        <a className="ms-3" href="#!" onClick>
+                                        <a className="ms-3" href="#!" onClick={handleSendMessage}>
                                             <MDBIcon fas icon="paper-plane" />
                                         </a>
                                     </div>
