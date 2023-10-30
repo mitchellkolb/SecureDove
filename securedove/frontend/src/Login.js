@@ -5,6 +5,8 @@ import app_logo from './securedovelogo.png';
 import api from './api';
 import './Login.css'
 import { useHistory } from "react-router-dom"; // for redirecting 
+// For hashing
+import CryptoJS from "crypto-js";
 
 // keeps track of who's logged in
 var user_id = undefined;
@@ -24,7 +26,11 @@ const Login = (props) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post('/login', {email, password});
+             // Hash the password user entered in login form
+            const hashedPw = CryptoJS.SHA256(password).toString();
+        
+            // const response = await api.post('/login', {email, password});
+            const response = await api.post('/login', {email, password:hashedPw});
             if (response.data.User_id !== undefined) {
                 // redirect to messages here
                 console.log("Login successful!");
