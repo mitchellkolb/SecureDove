@@ -5,6 +5,10 @@ import app_logo from './securedovelogo.png';
 import api from './api';
 import { useHistory } from "react-router-dom"; // for redirecting 
 
+// For hashing
+import CryptoJS from 'crypto-js'
+
+
 const Register = (props) =>{
     const history = useHistory();
 
@@ -16,6 +20,10 @@ const Register = (props) =>{
     const handleRegister = async (e) => {
         console.log(username, email, password, confirmPassword); // test
         e.preventDefault();
+
+        // Hash the password user entered
+        const hashedPw = CryptoJS.SHA256(password).toString();
+
         if (password !== confirmPassword){
             console.log("Passwords don't match.");
             // maybe create a popup that lets user know but for now we can check console
@@ -23,7 +31,7 @@ const Register = (props) =>{
         }
         else{
             try {
-                const response = await api.post('/register', {username, email, password});
+                const response = await api.post('/register', {username, email, password:hashedPw});
                 if (response.data.message === 'Register successful!') {
                     // redirect to login here
                     // history.push('/login')
