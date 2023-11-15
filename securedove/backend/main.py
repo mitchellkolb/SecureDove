@@ -16,6 +16,8 @@ import sys
 from psycopg2 import connect
 # import the error handling libraries for psycopg2
 from psycopg2 import OperationalError, errorcodes, errors
+#This is the new addition for seperating the API key
+from config import API_KEY
 
 #Global variable containing currently logged in user's id. Set to 0 by default when no user is logged in
 CURRENT_USER = 0 
@@ -51,8 +53,8 @@ app.add_middleware(
 )
 
 try:
-    #Should really put line 55 into a secure file that doesn't go on github but until everyone can run this code i'll leave it in the file as is. Security wise this is bad procedure
-    conn = psycopg2.connect('postgres://wjjloedt:JXFCuJI7Di3CtZ-enIemY9J_m8VxNXpZ@berry.db.elephantsql.com/wjjloedt')
+    #conn = psycopg2.connect('postgres://wjjloedt:JXFCuJI7Di3CtZ-enIemY9J_m8VxNXpZ@berry.db.elephantsql.com/wjjloedt')
+    conn = psycopg2.connect(API_KEY)
     print('Connection Success!')
     connectionsucceeded = True
 except:
