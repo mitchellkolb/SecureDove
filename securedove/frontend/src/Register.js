@@ -23,32 +23,57 @@ const Register = (props) =>{
 
         // Hash the password user entered
         const hashedPw = CryptoJS.SHA256(password).toString();
-
+        
         if (password !== confirmPassword){
             console.log("Passwords don't match.");
             // maybe create a popup that lets user know but for now we can check console
             alert("The passwords you entered don't match.")
         }
         else{
-            try {
-                const response = await api.post('/register', {username, email, password:hashedPw});
-                if (response.data.message === 'Register successful!') {
-                    // redirect to login here
-                    // history.push('/login')
-                    console.log("Register successful!")
-                    history.push("/login");
-                }
-                else {
-                    console.error('Register failed:', response.data.message);
+            // check length of password to be at least 8
+            if (password.length < 8) {
+                alert("Password needs to be at least 8 characters in length.");
+            }
+            // check if it contains a capital letter
+            else if (/[A-Z]/.test(password) === false) {
+                alert("Password must contain at least one upper case letter.")
+            }
+            // check if it contains at least 1 upper case
+            else if (/[0-9]/.test(password) === false) {
+                alert("Password must contain at least one number 0-9.")
+            }
+            // check if it contains at least 1 symbol
+            else if (/[!@#$%^&*]/.test(password) === false) {
+                alert("Password must contain a special character from the following list: !@#$%^&*");
+            }
+            // call backend
+            else {
+                try {
+                    const response = await api.post('/register', {username, email, password:hashedPw});
+                    if (response.data.message === 'Register successful!') {
+                        // redirect to login here
+                        // history.push('/login')
+                        console.log("Register successful!")
+                        history.push("/login");
+                    }
+                    else {
+                        console.error('Register failed:', response.data.message);
+                        alert("Error registering. Please try again.")
+                    }
+                } 
+                catch (error) {
+                    console.error('Register failed:', error);
                     alert("Error registering. Please try again.")
                 }
-            } 
-            catch (error) {
-                console.error('Register failed:', error);
-                alert("Error registering. Please try again.")
             }
         }
     };
+
+
+    // pop up password requirements for user when they are about to enter a password
+    const passwordClicked = async(e) => {
+        alert("Passwords requirements: \n-At least 8 characters in length \n-At least one upper case letter \n-At least one number 0-9 \n-At least one special character from !@#$%^&*");
+    }
 
     return (
         <Container className="mt-5">
@@ -70,7 +95,7 @@ const Register = (props) =>{
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label  style={{color: "white"}}>Password</Form.Label>
-                    <Form.Control type="password" name="password" placeholder="Enter Password" onChange={(e)=>setPassword(e.target.value)}/>
+                    <Form.Control type="password" name="password" placeholder="Enter Password" onChange={(e)=>setPassword(e.target.value)} onClick={passwordClicked}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
