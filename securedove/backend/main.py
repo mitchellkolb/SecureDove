@@ -79,7 +79,7 @@ async def login(user: UserLogin):
     print("user:",user.email,"pass:", user.password)
     # Grabbing the row that has the corresponding email 
     try:
-        cur.execute(f"SELECT * FROM Users WHERE email = '{user.email}'")
+        cur.execute(f"SELECT * FROM Users WHERE email = %s", (user.email, ))
         rows = cur.fetchall()
     except:
         print("Email not found, click register to create a new account")
@@ -102,7 +102,7 @@ async def login(user: UserLogin):
 @app.post("/register")
 async def register(user: UserRegister):
     try:
-        cur.execute(f"INSERT INTO Users (username, email, password) VALUES ('{user.username}', '{user.email}', '{user.password}');")
+        cur.execute(f"INSERT INTO Users (username, email, password) VALUES (%s, %s, %s)", (user.username, user.email, user.password))
         conn.commit()
     except:
         print("Error inserting user to table.")
@@ -127,18 +127,18 @@ async def register(user: UserRegister):
 async def delete_user(user_id):
     print("trying to delete user_id=",user_id)
     try:
-        cur.execute(f"SELECT chat_id From Chats WHERE user1_id = {user_id} OR user2_id={user_id};")
+        cur.execute(f"SELECT chat_id From Chats WHERE user1_id = %s OR user2_id= %s;", (user_id, user_id))
         rows = cur.fetchall()
         print("rows",rows)
         if rows != []:
-            cur.execute(f"DELETE FROM Messages WHERE sent_in = {rows[0][0]};")
-            cur.execute(f"DELETE FROM Chats WHERE user1_id = {user_id} OR user2_id = {user_id};")
+            cur.execute(f"DELETE FROM Messages WHERE sent_in = %s;", (rows[0][0]),)
+            cur.execute(f"DELETE FROM Chats WHERE user1_id = %s OR user2_id = %s;", (user_id, user_id))
             conn.commit()
     except Exception as e:
         raise HTTPException(status_code=403, detail=str(e))
     try:
-        cur.execute(f"DELETE FROM Invitations WHERE inviter_id = {user_id} OR invitee_id = {user_id};")
-        cur.execute(f"DELETE FROM Users WHERE user_id = {user_id};")
+        cur.execute(f"DELETE FROM Invitations WHERE inviter_id = %s OR invitee_id = %s;", (user_id, user_id))
+        cur.execute(f"DELETE FROM Users WHERE user_id = %s;", (user_id, ))
         conn.commit()
         return {"message":"Deletion successful!"}
     except Exception as e:
@@ -149,7 +149,7 @@ async def delete_user(user_id):
 async def get_username(user_id):
     print("getting username for user_id=", user_id)
     try:
-        cur.execute(f"SELECT username from Users WHERE user_id={user_id}")
+        cur.execute(f"SELECT username from Users WHERE user_id = %s", (user_id, ))
         rows = cur.fetchall()
     except Exception as e:
         raise HTTPException(status_code=496, detail=str(e))
@@ -165,7 +165,7 @@ async def get_username(user_id):
 def view_invite(user_id):
     
     try:
-        cur.execute(f"SELECT * FROM Invitations where invitee_id = '{user_id}'") 
+        cur.execute(f"SELECT * FROM Invitations where invitee_id = %s", (user_id, )) 
     except:
         print("Could not retrieve any invitations from database")
         return {"error":"Could not retrieve any invitations from database"}
@@ -175,7 +175,7 @@ def view_invite(user_id):
     for tup in rows:
         inviter_id = tup[1]
         try:
-            cur.execute(f"SELECT username FROM Users where user_id = '{inviter_id}'") 
+            cur.execute(f"SELECT username FROM Users where user_id = %s", (inviter_id, )) 
         except:
             print("Could not retrieve any invitations from database")
             return {"error":"Could not retrieve any invitations from database"}
@@ -194,7 +194,7 @@ def new_invite(inviter_user_id, newUser):
     
     print(inviter_user_id, newUser)
     try:
-        cur.execute(f"SELECT * FROM Users where email = '{newUser}'") 
+        cur.execute(f"SELECT * FROM Users where email = %s", (newUser, )) 
         rows = cur.fetchall()
         invitee_user_id = rows[0][0]
     except:
@@ -203,7 +203,7 @@ def new_invite(inviter_user_id, newUser):
 
 
     try:
-        cur.execute(f"INSERT INTO Invitations (inviter_id, invitee_id) VALUES ('{inviter_user_id}', '{invitee_user_id}')")
+        cur.execute(f"INSERT INTO Invitations (inviter_id, invitee_id) VALUES (%s, %s)", (inviter_user_id, invitee_user_id))
         conn.commit()
         return {"message": "Invite sent successfully"}
     except:
@@ -224,7 +224,7 @@ def decide_invite(invite_id, decision):
     if decision == "true":
         print("true")
         try:
-            cur.execute(f"SELECT * FROM Invitations where invitation_id = {invite_id}") 
+            cur.execute(f"SELECT * FROM Invitations where invitation_id = %s", (invite_id, )) 
         except:
             print("Could not retrieve Invitation from database")
             return {"error":"Could not retrieve Invitation from database"}
@@ -235,14 +235,14 @@ def decide_invite(invite_id, decision):
         print(user_id1, user_id2)
 
         try:
-            cur.execute(f"DELETE FROM Invitations WHERE invitation_id = {invite_id}")
+            cur.execute(f"DELETE FROM Invitations WHERE invitation_id = %s", (invite_id, ))
             conn.commit()
         except:
             print("Could not delete the invitation from the database")
             return {"error":"Could not delete the invitation from the database"}
 
         try:
-            cur.execute(f"INSERT INTO Chats (user1_id, user2_id) VALUES ('{user_id1}', '{user_id2}')")
+            cur.execute(f"INSERT INTO Chats (user1_id, user2_id) VALUES (%s, %s)", (user_id1, user_id2))
             conn.commit()
             return {"message": "Invite accepted successfully"}
         except:
@@ -252,7 +252,7 @@ def decide_invite(invite_id, decision):
     else:
         print("false")
         try:
-            cur.execute(f"DELETE FROM Invitations WHERE invitation_id = {invite_id}")
+            cur.execute(f"DELETE FROM Invitations WHERE invitation_id = %s", (invite_id, ))
             conn.commit()
         except:
             print("Could not delete the invitation from the database")
@@ -271,7 +271,7 @@ def decide_invite(invite_id, decision):
 @app.get("/left_bar_chat/{user_id}")
 def left_bar_chat(user_id):
     
-    cur.execute(f"SELECT username FROM Users WHERE user_id = {user_id}")
+    cur.execute(f"SELECT username FROM Users WHERE user_id = %s", (user_id))
     rows = cur.fetchall()
     if rows != []:
         username = rows[0][0]
@@ -352,8 +352,8 @@ def send_message(user_id, chat_id, content):
     try:
         cur.execute(f"""
              INSERT INTO messages (message_text, sent_by, sent_in)
-             VALUES ('{content}', {user_id}, {chat_id});
-        """)
+             VALUES (%s, %s, %s);
+        """, (content, user_id, chat_id))
         conn.commit()
         return {"message": "Message sent successfully"}
     except Exception as e:
