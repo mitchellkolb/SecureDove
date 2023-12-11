@@ -41,7 +41,9 @@ app = FastAPI(title="SecureDove Backend")
 #Set up for connecting to the database
 origins = [
     "http://localhost:3000",
-    "localhost:3000"
+    "localhost:3000",
+    "http://localhost:3001",
+    "localhost:3001"
 ]
 
 app.add_middleware(
@@ -127,18 +129,18 @@ async def register(user: UserRegister):
 async def delete_user(user_id):
     print("trying to delete user_id=",user_id)
     try:
-        cur.execute(f"SELECT chat_id From Chats WHERE user1_id = %s OR user2_id= %s;", (user_id, user_id))
+        cur.execute("SELECT chat_id From Chats WHERE user1_id = %s OR user2_id= %s;"% (user_id, user_id))
         rows = cur.fetchall()
         print("rows",rows)
         if rows != []:
-            cur.execute(f"DELETE FROM Messages WHERE sent_in = %s;", (rows[0][0]),)
-            cur.execute(f"DELETE FROM Chats WHERE user1_id = %s OR user2_id = %s;", (user_id, user_id))
+            cur.execute("DELETE FROM Messages WHERE sent_in = %s;" %(rows[0][0]),)
+            cur.execute("DELETE FROM Chats WHERE user1_id = %s OR user2_id = %s;" %(user_id, user_id))
             conn.commit()
     except Exception as e:
         raise HTTPException(status_code=403, detail=str(e))
     try:
-        cur.execute(f"DELETE FROM Invitations WHERE inviter_id = %s OR invitee_id = %s;", (user_id, user_id))
-        cur.execute(f"DELETE FROM Users WHERE user_id = %s;", (user_id, ))
+        cur.execute("DELETE FROM Invitations WHERE inviter_id = %s OR invitee_id = %s;"%(user_id, user_id))
+        cur.execute("DELETE FROM Users WHERE user_id = %s;"% (user_id))
         conn.commit()
         return {"message":"Deletion successful!"}
     except Exception as e:
@@ -149,7 +151,7 @@ async def delete_user(user_id):
 async def get_username(user_id):
     print("getting username for user_id=", user_id)
     try:
-        cur.execute(f"SELECT username from Users WHERE user_id = %s", (user_id, ))
+        cur.execute("SELECT username from Users WHERE user_id = %s" %(user_id ))
         rows = cur.fetchall()
     except Exception as e:
         raise HTTPException(status_code=496, detail=str(e))
@@ -163,9 +165,8 @@ async def get_username(user_id):
 # View list of invitations for that user based on the user_id. Should only be pending invites in the database
 @app.get("/view_invite/{user_id}")
 def view_invite(user_id):
-    
     try:
-        cur.execute(f"SELECT * FROM Invitations where invitee_id = %s", (user_id, )) 
+        cur.execute("SELECT * FROM Invitations where invitee_id = %s" %(user_id)) 
     except:
         print("Could not retrieve any invitations from database")
         return {"error":"Could not retrieve any invitations from database"}
@@ -175,7 +176,7 @@ def view_invite(user_id):
     for tup in rows:
         inviter_id = tup[1]
         try:
-            cur.execute(f"SELECT username FROM Users where user_id = %s", (inviter_id, )) 
+            cur.execute("SELECT username FROM Users where user_id = %s" %(inviter_id)) 
         except:
             print("Could not retrieve any invitations from database")
             return {"error":"Could not retrieve any invitations from database"}
@@ -194,7 +195,7 @@ def new_invite(inviter_user_id, newUser):
     
     print(inviter_user_id, newUser)
     try:
-        cur.execute(f"SELECT * FROM Users where email = %s", (newUser, )) 
+        cur.execute("SELECT * FROM Users where email = '%s'" % (newUser)) 
         rows = cur.fetchall()
         invitee_user_id = rows[0][0]
     except:
@@ -203,7 +204,7 @@ def new_invite(inviter_user_id, newUser):
 
 
     try:
-        cur.execute(f"INSERT INTO Invitations (inviter_id, invitee_id) VALUES (%s, %s)", (inviter_user_id, invitee_user_id))
+        cur.execute("INSERT INTO Invitations (inviter_id, invitee_id) VALUES (%s, %s)" %(inviter_user_id, invitee_user_id))
         conn.commit()
         return {"message": "Invite sent successfully"}
     except:
@@ -224,7 +225,8 @@ def decide_invite(invite_id, decision):
     if decision == "true":
         print("true")
         try:
-            cur.execute(f"SELECT * FROM Invitations where invitation_id = %s", (invite_id, )) 
+            cur.execute("SELECT * FROM Invitations where invitation_id = %s"%(invite_id)) 
+
         except:
             print("Could not retrieve Invitation from database")
             return {"error":"Could not retrieve Invitation from database"}
@@ -235,14 +237,14 @@ def decide_invite(invite_id, decision):
         print(user_id1, user_id2)
 
         try:
-            cur.execute(f"DELETE FROM Invitations WHERE invitation_id = %s", (invite_id, ))
+            cur.execute("DELETE FROM Invitations WHERE invitation_id = %s" %(invite_id ))
             conn.commit()
         except:
             print("Could not delete the invitation from the database")
             return {"error":"Could not delete the invitation from the database"}
 
         try:
-            cur.execute(f"INSERT INTO Chats (user1_id, user2_id) VALUES (%s, %s)", (user_id1, user_id2))
+            cur.execute("INSERT INTO Chats (user1_id, user2_id) VALUES (%s, %s)"%(user_id1, user_id2))
             conn.commit()
             return {"message": "Invite accepted successfully"}
         except:
@@ -252,7 +254,7 @@ def decide_invite(invite_id, decision):
     else:
         print("false")
         try:
-            cur.execute(f"DELETE FROM Invitations WHERE invitation_id = %s", (invite_id, ))
+            cur.execute("DELETE FROM Invitations WHERE invitation_id = %s" %(invite_id))
             conn.commit()
         except:
             print("Could not delete the invitation from the database")
@@ -271,7 +273,7 @@ def decide_invite(invite_id, decision):
 @app.get("/left_bar_chat/{user_id}")
 def left_bar_chat(user_id):
     
-    cur.execute(f"SELECT username FROM Users WHERE user_id = %s", (user_id))
+    cur.execute("SELECT username FROM Users WHERE user_id = %s" %(user_id))
     rows = cur.fetchall()
     if rows != []:
         username = rows[0][0]
@@ -336,9 +338,12 @@ def load_chat(chat_id):
                 ORDER BY Messages.time_sent;
             """)
             rows = cur.fetchall()
-            columns = ["Sender Username", "Message", "Timestamp"]
-            data = [dict(zip(columns, row)) for row in rows]
-            return {"chat_data": data}
+            if (rows):
+                columns = ["Sender Username", "Message", "Timestamp"]
+                data = [dict(zip(columns, row)) for row in rows]
+                return {"chat_data": data}
+            else:
+                return{"chat_data":{"Sender Username":"", "Message":"", "Timestamp":""}}
         except Exception as e:
             raise HTTPException(status_code=499, detail=str(e))
     else:
@@ -349,11 +354,9 @@ def load_chat(chat_id):
 #possible secuirty isuses are sql injection and content checking of the content variable for overflow and malicous code 
 @app.post("/send_message/{user_id}/{chat_id}/{content}")
 def send_message(user_id, chat_id, content):
+    #print("INSERT INTO messages (message_text, sent_by, sent_in) VALUES (%s, %s, %s);" %(content, user_id, chat_id))
     try:
-        cur.execute(f"""
-             INSERT INTO messages (message_text, sent_by, sent_in)
-             VALUES (%s, %s, %s);
-        """, (content, user_id, chat_id))
+        cur.execute("INSERT INTO messages (message_text, sent_by, sent_in) VALUES ('%s', %s, %s);" %(content, user_id, chat_id))
         conn.commit()
         return {"message": "Message sent successfully"}
     except Exception as e:

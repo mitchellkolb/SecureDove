@@ -137,10 +137,29 @@ const Messages = (props) => {
 
     // Show success message after chat invite has been sent
     const [showSuccess, setShowSuccess] = useState(false);
+    const [inviteeEmail, setInviteeEmail] = useState('');
 
-    const handleNewChatModalCreate = () => {
-        setShowSuccess(true);
-        setNewChatModalShow(false)
+    const inviteeInputChanged = (e) => {
+        setInviteeEmail(e.target.value);
+    };
+    
+    async function handleNewChatModalCreate() {
+        try{
+            const response = await api.post(`/new_invite/${user_id}/${inviteeEmail}`); 
+            if (response.data.message === "Invite sent successfully"){
+                setShowSuccess(true);
+            }
+            else{
+                console.log("User doesn't exist");
+            }
+        }
+        catch(error){
+            console.error("Sending invite failed: ", error);
+            alert("Error sending invite.");
+        }
+
+
+        setNewChatModalShow(false);
         
     }
 
@@ -340,7 +359,10 @@ const Messages = (props) => {
                                                                             <Form.Label className="form-label" style={{color: 'blue', fontWeight: 'bold'}}>Invitee</Form.Label>
                                                                             <Form.Control
                                                                                 type="text"
-                                                                                placeholder="Enter username to send a chat invite"/>
+                                                                                placeholder="Enter email to send a chat invite"
+                                                                                value={inviteeEmail}
+                                                                                onChange={(e)=>setInviteeEmail(e.target.value)}
+                                                                            />
                                                                         </Form.Group>
                                                                     </Form>
                                                                 </Modal.Body>
