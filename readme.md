@@ -1,21 +1,5 @@
 
 
-Members:
-
-
-
-To run the frontend:
-1. install node.js
-2. in the frontend directory, run the command "npm install" to enable node modules
-3. in the same directory, run the command "npm start" to initialize app
-
-To run the backend:
-1. travel to the /backend directory
-2. run "pip install -r requirements.txt" to install libraries needed
-3. run command "uvicorn main:app" to run backend on local port 8000
-
-
-
 <h1 align="center">SecureDove</h1>
 
 <p align="center">
@@ -44,7 +28,7 @@ This project is intended to showcase our knowledge learning about software secur
 <details>
 <summary style="color:#5087dd">Watch the Full Video Demo Here</summary>
 
-[![Full Video Demo Here](https://img.youtube.com/vi/VidKEY/0.jpg)](https://www.youtube.com/watch?v=VidKEY)
+[![Full Video Demo Here](https://img.youtube.com/vi/-27FixPlENk/0.jpg)](https://www.youtube.com/watch?v=-27FixPlENk)
 
 </details>
 
@@ -84,7 +68,7 @@ This project is intended to showcase our knowledge learning about software secur
 - [Flavio Alvarez Penate](https://github.com/f-alvarezpenate)
 - [Phearak Both Bunna](https://github.com/)
 - [Jaysen Anderson](https://github.com/)
-- Professor. 
+- Professor. Haipeng Cai
 
 
 
@@ -92,10 +76,20 @@ This project is intended to showcase our knowledge learning about software secur
 
 
 # How to Set Up
-This project was implemented on our local machine inside of a virtual machine using:
-- Ubuntu Version 20.04.03 found at this [link](http://lt.releases.ubuntu.com/20.04.3/).
+This project was implemented on our local machine:
 - Clone this repository 
 - Open terminal at the codebase `~.../SecureDove/`
+
+To run the frontend:
+1. install node.js
+2. in the frontend directory, run the command "npm install" to enable node modules
+3. in the same directory, run the command "npm start" to initialize app
+
+To run the backend:
+1. travel to the /backend directory
+2. run "pip install -r requirements.txt" to install libraries needed
+3. run command "uvicorn main:app" to run backend on local port 8000
+
 
 
 
