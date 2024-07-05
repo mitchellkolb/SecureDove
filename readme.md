@@ -146,5 +146,5 @@ Future improvements could include
 
 --- 
 # Acknowledgments
-This codebase and all supporting materials was made as apart of a course for my undergrad at WSU for CPTS 428 - XXX in the Fall of 2023. Our original repository can be found at this link. I forked it so I could add our documents and make the readme include more detail. Here is the original repo: [CptS428-ABFMJ-SecureDove](https://github.com/AliDzulfiqar/CptS428-ABFMJ-SecureDove)
+This codebase and all supporting materials was made as apart of a course for my undergrad at WSU for CPTS 428 - Software Security and Reverse Engineering in the Fall of 2023. Our original repository can be found at this link. I forked it so I could add our documents and make the readme include more detail. Here is the original repo: [CptS428-ABFMJ-SecureDove](https://github.com/AliDzulfiqar/CptS428-ABFMJ-SecureDove)
 
