@@ -64,10 +64,10 @@ This project is intended to showcase our knowledge learning about software secur
 
 # Team / Contributors / Teachers
 - [Mitchell Kolb](https://github.com/mitchellkolb)
-- [Muhammad Ali Dzulfiqar](https://github.com/)
+- [Muhammad Ali Dzulfiqar](https://github.com/AliDzulfiqar)
 - [Flavio Alvarez Penate](https://github.com/f-alvarezpenate)
-- [Phearak Both Bunna](https://github.com/)
-- [Jaysen Anderson](https://github.com/)
+- [Phearak Both Bunna](https://github.com/Phearakbothbunna)
+- [Jaysen Anderson](https://github.com/JaysenWSU)
 - Professor. Haipeng Cai
 
 
@@ -146,5 +146,5 @@ Future improvements could include
 
 --- 
 # Acknowledgments
-This codebase and all supporting materials was made as apart of a course for my undergrad at WSU for CPTS XXX - XXX in the Spring of 2022. 
+This codebase and all supporting materials was made as apart of a course for my undergrad at WSU for CPTS 428 - XXX in the Fall of 2023. Our original repository can be found at this link. I forked it so I could add our documents and make the readme include more detail. Here is the original repo: [CptS428-ABFMJ-SecureDove](https://github.com/AliDzulfiqar/CptS428-ABFMJ-SecureDove)
 
