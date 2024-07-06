@@ -3,18 +3,27 @@
 <h1 align="center">SecureDove</h1>
 
 <p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/mitchellkolb/SecureDove?color=56BEB8">
+  <img alt="Github top language" src="https://img.shields.io/github/languages/top/mitchellkolb/SecureDove?color=009688">
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/mitchellkolb/SecureDove?color=56BEB8">
+  <img alt="Github language count" src="https://img.shields.io/github/languages/count/mitchellkolb/SecureDove?color=009688">
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/mitchellkolb/SecureDove?color=56BEB8">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/mitchellkolb/SecureDove?color=009688">
 
-  <img alt="Github stars" src="https://img.shields.io/github/stars/mitchellkolb/SecureDove?color=56BEB8" />
+  <img alt="Github stars" src="https://img.shields.io/github/stars/mitchellkolb/SecureDove?color=009688" />
 </p>
 
 <p align="center">
 <img
     src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"
+    alt="Website Badge" />
+<img
+    src="https://img.shields.io/badge/React-48AAC5?style=for-the-badge&logo=React&logoColor=white"
+    alt="Website Badge" />
+<img
+    src="https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=postgresql&logoColor=white"
+    alt="Website Badge" />
+<img
+    src="https://img.shields.io/badge/fastapi-009688?style=for-the-badge&logo=fastapi&logoColor=white"
     alt="Website Badge" />
 <img
     src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=Windows 10&logoColor=white"
