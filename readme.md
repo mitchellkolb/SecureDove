@@ -17,13 +17,13 @@
     src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"
     alt="Website Badge" />
 <img
+    src="https://img.shields.io/badge/fastapi-009688?style=for-the-badge&logo=fastapi&logoColor=white"
+    alt="Website Badge" />
+<img
     src="https://img.shields.io/badge/React-48AAC5?style=for-the-badge&logo=React&logoColor=white"
     alt="Website Badge" />
 <img
     src="https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=postgresql&logoColor=white"
-    alt="Website Badge" />
-<img
-    src="https://img.shields.io/badge/fastapi-009688?style=for-the-badge&logo=fastapi&logoColor=white"
     alt="Website Badge" />
 <img
     src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=Windows 10&logoColor=white"
