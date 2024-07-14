@@ -30,9 +30,10 @@
     alt="Website Badge" />
 </p>
 
-This project is intended to showcase our knowledge learning about software security and reverse engineering. We developed an instant messenger that provides secure messaging with explicit confidentiality and integrity defenses (e.g., checking and defeating message hijacking)
 
-![project image](resources/image1.png)
+SecureDove is a secure instant messaging application developed as part of our Software Security and Reverse Engineering course. Our team of five utilized a "build-break-fix" methodology to design, assess, and enhance the application's security. The project involved implementing clear security measures such as end-to-end encryption and multi-factor authentication, identifying and addressing vulnerabilities through comprehensive testing, and applying advanced techniques to safeguard user data and ensure message integrity.
+
+![project image](resources/dove.gif)
 
 <details>
 <summary style="color:#5087dd">Watch the Full Video Demo Here</summary>
@@ -50,14 +51,23 @@ This project is intended to showcase our knowledge learning about software secur
 - [Team / Contributors / Teachers](#team--contributors--teachers)
 - [How to Set Up](#how-to-set-up)
 - [Project Overview](#project-overview)
-- [References](#references)
+  - [Project Details](#project-details)
+    - [Assure Deliverable](#assure-deliverable)
+    - [Assess Deliverable](#assess-deliverable)
+    - [Amend Deliverable](#amend-deliverable)
+  - [Technical Details](#technical-details)
+  - [Files and Structure](#files-and-structure)
+  - [Results and Presentation](#results-and-presentation)
+  - [Future Work](#future-work)
 - [Acknowledgments](#acknowledgments)
 
 ---
 
 # What I Learned in this Project
-- How to
-- Programming in 
+- Develop and secure a web application, focusing on identifying and addressing security vulnerabilities.
+- Conduct security assessments including penetration testing and vulnerability analysis.
+- Implement security best practices, such as end-to-end encryption, multi-factor authentication, and secure coding techniques.
+
 
 
 
@@ -66,7 +76,9 @@ This project is intended to showcase our knowledge learning about software secur
 - VS Code
 - Terminal
 - Windows 10
-
+- **Frontend:** ReactJS
+- **Backend:** FastAPI
+- **Database:** PostgreSQL (ElephantSQL)
 
 
 
@@ -78,6 +90,8 @@ This project is intended to showcase our knowledge learning about software secur
 - [Phearak Both Bunna](https://github.com/Phearakbothbunna)
 - [Jaysen Anderson](https://github.com/JaysenWSU)
 - Professor. Haipeng Cai
+- Team Name: ABFMJ
+
 
 
 
@@ -87,69 +101,59 @@ This project is intended to showcase our knowledge learning about software secur
 # How to Set Up
 This project was implemented on our local machine:
 - Clone this repository 
-- Open terminal at the codebase `~.../SecureDove/`
+- Open terminal at the codebase `~.../SecureDove/securedove`
 
 To run the frontend:
 1. install node.js
-2. in the frontend directory, run the command "npm install" to enable node modules
-3. in the same directory, run the command "npm start" to initialize app
+2. in the frontend directory, run the command `npm install` to enable node modules
+3. in the same directory, run the command `npm start` to initialize app
 
 To run the backend:
 1. travel to the /backend directory
-2. run "pip install -r requirements.txt" to install libraries needed
-3. run command "uvicorn main:app" to run backend on local port 8000
+2. run `pip install -r requirements.txt` to install libraries needed
+3. run command `uvicorn main:app --reload` to run backend on local port 8000
 
 
 
 
 
-
-# Project Overview
-This project utilizes 
-CptS 428 - Software Security and Reverse Engineering Project
-Instructor: Professor Haipeng Cai
-Team Name: ABFMJ
-
-
+# Project Overview 
 
 ## Project Details
+In this project, we applied the principles and methodologies learned in our Software Security and Reverse Engineering course to develop a secure instant messaging application named SecureDove. The project followed a "build-break-fix" methodology, focusing on creating a secure application, identifying its vulnerabilities, and then implementing solutions to mitigate these vulnerabilities.
 
-### Introduction
-In this project, we apply 
+### Assure Deliverable
+In this phase, we identified the specific requirements of the project, focusing on concrete security goals and metrics. We designed and implemented the initial version of the SecureDove application, incorporating security measures such as end-to-end encryption and multi-factor authentication.
 
+### Assess Deliverable
+In this phase, we performed security assessments to identify vulnerabilities within the SecureDove application. We conducted various tests and developed attacks to exploit these vulnerabilities, documenting our findings and the methods used to compromise the application's security.
 
-### Literature Review
-In this we drew inspiration from various sources, including video tutorials online for 
+### Amend Deliverable
+In this phase, we implemented enhanced security measures to address the vulnerabilities identified during the assessment phase. We updated our software design, re-implemented the application, and conducted regression testing to validate the effectiveness of the new security measures.
 
+## Technical Details
+The project employs a modern tech stack to achieve its objectives:
+- **Frontend:** Built with ReactJS, utilizing React Router DOM for navigation and state management.
+- **Backend:** Implemented using FastAPI, with a PostgreSQL database hosted on ElephantSQL.
+- **Security Measures:** Included end-to-end encryption, multi-factor authentication, hashed passwords, and secure API key management.
 
-### Technical Plan
-The project employs a 
+## Files and Structure
+- `frontend/`: Contains the ReactJS frontend code.
+- `backend/`: Contains the FastAPI backend code.
+- `.env`: Stores environment variables such as the API key (not included in the repository for security reasons).
+- `config.py`: Loads environment variables for the backend.
 
-
-### Implementation Details
-
-#### Files and Structure
-- `game.py`: Contains the racing game environment and controls the car's movement.
-> [!NOTE]
-> These files were 
-
-
-### Implementation
-In this project
-
-#### Results and Observations
-During development,
-<p float="left">
-  <img src="resources/image1.png" alt="First Try" width="300" />
-  <img src="resources/image2.png" alt="Final Try" width="307" />
-</p>
-
-#### Future Work
-Future improvements could include
+## Results and Presentation
+During development, we identified several vulnerabilities and implemented fixes to secure the application. Below are some screenshots of SecureDove’s user interface:
 
 
+## Future Work
+Future improvements could include:
+- Implementing web sockets for real-time messaging to enhance user experience.
+- Adding session tokens and improved session management for better security.
+- Implementing a user timeout feature after multiple failed login attempts to mitigate brute force attacks.
 
-## References
+
 
 
 
