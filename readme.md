@@ -104,14 +104,14 @@ This project was implemented on our local machine:
 - Open terminal at the codebase `~.../SecureDove/securedove`
 
 To run the frontend:
-1. install node.js
-2. in the frontend directory, run the command `npm install` to enable node modules
-3. in the same directory, run the command `npm start` to initialize app
+1. Install node.js
+2. In the `/securedove/frontend` directory, run the command `npm install` to enable node modules
+3. In the same directory, run the command `npm start` to initialize app
 
 To run the backend:
-1. travel to the /backend directory
-2. run `pip install -r requirements.txt` to install libraries needed
-3. run command `uvicorn main:app --reload` to run backend on local port 8000
+1. In the `/securedove/backend` directory
+2. Run `pip install -r requirements.txt` to install libraries needed
+3. Run command `uvicorn main:app --reload` to run the backend on your local port example: 8000
 
 
 
